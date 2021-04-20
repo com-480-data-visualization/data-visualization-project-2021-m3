@@ -50,8 +50,8 @@ User profiles and match statistics will provide additional context. *FINISH*
 
 The dataset contains 472 men's and 445 women's Grand Slam finals, but only 211 of those records (for each gender) correspond to the Open Era. Since the beginning of the Open Era, there have been: 
 
-- 106 different male Grand Slam finalists, including 55 distinct male winners
-- 94 different female Grand Slam finalists, including 55 distinct female winners
+- 106 different male Grand Slam finalists, including 55 distinct male winners;
+- 94 different female Grand Slam finalists, including 55 distinct female winners.
 
 Roger Federer and Rafael Nadal have both won 20 titles and are therefore tied for the all-time most victories. However, Roger Federer has also lost in 10 Grand Slam finals – he is tied with Ivan for the most frequent runner-up title. Most Nadal's Grand Slam titles come from the French Open.
 
