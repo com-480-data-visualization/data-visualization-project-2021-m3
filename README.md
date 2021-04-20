@@ -45,8 +45,23 @@ User profiles and match statistics will provide additional context. *FINISH*
 ### Exploratory Data Analysis
 
 > Pre-processing of the data set you chose
+>
 > - Show some basic statistics and get insights about the data
 
+The dataset contains 472 men's and 445 women's Grand Slam finals, but only 211 of those records (for each gender) correspond to the Open Era. Since the beginning of the Open Era, there have been: 
+
+- 106 different male Grand Slam finalists, including 55 distinct male winners
+- 94 different female Grand Slam finalists, including 55 distinct female winners
+
+Roger Federer and Rafael Nadal have both won 20 titles and are therefore tied for the all-time most victories. However, Roger Federer has also lost in 10 Grand Slam finals – he is tied with Ivan for the most frequent runner-up title. Most Nadal's Grand Slam titles come from the French Open.
+
+As for women, Serena Williams dominates the statistics with 23 titles, one more than the second Steffi Graf. An interesting observation is that half of Martina Navratilova's titles come from Wimbledon.
+
+We also tried to visualize the networks of players who encountered each other in the finals. Although this visualization is not very clear due to the relatively large amount of data, we can still get interesting insights from it. Each network (for men and women) has one big densely connected cluster and then some small disconnected parts. The core of the cluster is represented by players who frequently appeared in Grand Slam finals, and we can see the position of the player in the cluster indicates the time during which they were active. For instance, Billie Jean King and Karolína Plíšková are on the different extremes of the network for the latter one is still an active player while the former has retired long ago. 
+
+On the margins of the cluster are players who did not play in the finals as often, perhaps only once. The disconnected parts are formed by players who were part of a final in which their appearance was somehow surprising, in the sense that neither of the players ever played against a more "popular" player.
+
+The Jupyter notebook for these analyses (and additional ones) can be found here.
 
 ### Related work
 
