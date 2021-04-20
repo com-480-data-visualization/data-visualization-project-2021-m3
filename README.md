@@ -12,66 +12,58 @@
 
 **10% of the final grade**
 
-This is a preliminary milestone to let you set up goals for your final project and assess the feasibility of your ideas.
-Please, fill the following sections about your project.
-
-*(max. 2000 characters per section)*
-
 ### Dataset
 
-> Find a dataset (or multiple) that you will explore. Assess the quality of the data it contains and how much preprocessing / data-cleaning it will require before tackling visualization. We recommend using a standard dataset as this course is not about scraping nor data processing.
->
-> Hint: some good pointers for finding quality publicly available datasets ([Google dataset search](https://datasetsearch.research.google.com/), [Kaggle](https://www.kaggle.com/datasets), [OpenSwissData](https://opendata.swiss/en/), [SNAP](https://snap.stanford.edu/data/) and [FiveThirtyEight](https://data.fivethirtyeight.com/)), you could use also the DataSets proposed by the ENAC (see the Announcements section on Zulip).
+We created our dataset by scraping data from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Grand_Slam_singles_finals) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/). Our data consists of:
 
-- All Grand Slam winners and runner-ups (male and female)
-- Scrape profiles from Wikipedia
-- Statistics on the final match
-- [Grand Slam prize money](https://github.com/popovichN/grand-slam-prize-money/blob/master/tennis_pay.csv) ?
+- The Grand Slam singles finals dataset, both for [men](data/men_finals.csv) and [women](data/women_finals.csv) 
+- Information about the players dataset, both for [men](data/men_players_info.csv) and [women](data/women_players_info.csv) 
+- Statistics on the final match dataset, only for [men](data/men_match_stats.csv) 
+
+We also found an additional dataset containing the prize money for the Grand Slam finalists([Grand Slam prize money](https://github.com/popovichN/grand-slam-prize-money/blob/master/tennis_pay.csv)). However the prize values in the dataset are in different currencies and since they date starting from 1968 it is difficult to convert them using the exact exchange rates corresponding to the period. In addition the dataset has missing data since it contains entries only for the prize money from the tournaments from 1968 until 2015 (no data for 2016-2021). Therefore we are not certain if we would use this data set for now. 
+
+Unfortunately we weren't able to find a dataset or create one on our own for the statistics on the final match for the female players. Therefore we intend to continue on working with the datasets we have and provide visualizations for the data we managed to scrape.
+
+The obtained datasets including the information about the players(both male and female) have some missing data since they include records for tennis players that played in the Grand Slams dating from 1968. For some of the players we managed to fill in the missing information manually (directly in the csv file) by searching on the Internet, but for those that we didn't find any information such as exact date of birth or place of death, we left the fields empty (NaN). We also created some new fields by extracting information from already existing ones to ease the implementation when creating the visualizations.
+
+The women and men finalists datasets didn't require a lot of preprocessing steps. We changed some of the strings into numerical values(the column Year), discarded the records from years before the Open Era(1968-) and changed the format of some of the tournament names. 
+
+The match statistics for men include a lot of numerical values, however we kept those values in our dataset as string objects since our initial plan is to use those stats only for displaying purposes. For further usage if we decide on using these statistics for deriving other statistics (for example aggregates), the values would need to be converted to numerical.
+
+The preprocessing and data-cleaning we did for our datasets can be found in the first part of the notebook [here](preprocessing_eda.ipynb).
 
 ### Problematic
-
-> Frame the general topic of your visualization and the main axis that you want to develop.
-> - What am I trying to show with my visualization?
-> - Think of an overview for the project, your motivation, and the target audience.
 
 Tennis is one of the most popular individual sports world-wide. Professional tennis events receive a lot of attention, in particular the four major tournaments known as the Grand Slam. In this project, we aim to create an interactive visualization of data from the Grand Slam finals in the [Open Era](https://en.wikipedia.org/wiki/History_of_tennis#Open_Era) (1968-). This will allow the users to travel back in time and explore the careers of the best players in tennis history and their rivalries. The tool should satisfy anyone from the general public: from sports newbies to tennis-savvy users.
 
 The visualization will capture two different points of view:
-1. The first one will focus on the success of the finalists in terms of the number of wins and runner-ups over a specified period of time. This will allow to compare the performance of players who were active during the same time period, as well as accross generations.
-2. Secondly, by creating a network of players who competed against each other in a Grand Slam final, we will identify some of the greatest rivals as well as one-hit wonders.
+1. The first one will focus on the success of the finalists in terms of the number of wins and runner-ups over a specified period of time for each Grand Slam tournament. This will allow to compare the performance of players who were active during the same time period, as well as across generations.
+2. Secondly, by creating a network of players who competed against each other in a Grand Slam final, we will identify some of the greatest rivals as well as one-hit wonders. The user will be able to interact with the graph and select between which 2 players he would like to see the match statistics.
 
-User profiles and match statistics will provide additional context. *FINISH*
+In addition we would like to include the search bar where the user would be able to search for a specific user and the visualizations will be adapted to show the information for that user for the selected period of time.
+
+User profiles and match statistics will provide additional context.
 
 ### Exploratory Data Analysis
 
-> Pre-processing of the data set you chose
->
-> - Show some basic statistics and get insights about the data
+The dataset contains 472 men's and 445 women's Grand Slam finals, but only 211 of those records (for each gender) correspond to the Open Era. Since the beginning of the Open Era, there have been:
 
-The dataset contains 472 men's and 445 women's Grand Slam finals, but only 211 of those records (for each gender) correspond to the Open Era. Since the beginning of the Open Era, there have been: 
-
-- 106 different male Grand Slam finalists, including 55 distinct male winners;
-- 94 different female Grand Slam finalists, including 55 distinct female winners.
-
+106 different male Grand Slam finalists, including 55 distinct male winners;
+94 different female Grand Slam finalists, including 55 distinct female winners.
 Roger Federer and Rafael Nadal have both won 20 titles and are therefore tied for the all-time most victories. However, Roger Federer has also lost in 10 Grand Slam finals – he is tied with Ivan for the most frequent runner-up title. Most Nadal's Grand Slam titles come from the French Open.
 
 As for women, Serena Williams dominates the statistics with 23 titles, one more than the second Steffi Graf. An interesting observation is that half of Martina Navratilova's titles come from Wimbledon.
 
-We also tried to visualize the networks of players who encountered each other in the finals. Although this visualization is not very clear due to the relatively large amount of data, we can still get interesting insights from it. Each network (for [men](https://github.com/com-480-data-visualization/data-visualization-project-2021-m3/blob/master/data/img/network_men.png) and [women](https://github.com/com-480-data-visualization/data-visualization-project-2021-m3/blob/master/data/img/network_women.png) has one big densely connected cluster and then some small disconnected parts. The core of the cluster is represented by players who frequently appeared in Grand Slam finals, and we can see the position of the player in the cluster indicates the time during which they were active. For instance, Billie Jean King and Karolína Plíšková are on the different extremes of the network for the latter one is still an active player while the former has retired long ago. 
+We also tried to visualize the networks of players who encountered each other in the finals. Although this visualization is not very clear due to the relatively large amount of data, we can still get interesting insights from it. Each network (for men and women has one big densely connected cluster and then some small disconnected parts. The core of the cluster is represented by players who frequently appeared in Grand Slam finals, and we can see the position of the player in the cluster indicates the time during which they were active. For instance, Billie Jean King and Karolína Plíšková are on the different extremes of the network for the latter one is still an active player while the former has retired long ago.
 
 On the margins of the cluster are players who did not play in the finals as often, perhaps only once. The disconnected parts are formed by players who were part of a final in which their appearance was somehow surprising, in the sense that neither of the players ever played against a more "popular" player.
 
-The Jupyter notebook for these analyses (and additional ones) can be found [here](https://github.com/com-480-data-visualization/data-visualization-project-2021-m3/blob/master/preprocessing_eda.ipynb).
+The Jupyter notebook for these analyses (and additional ones) can be found [here](preprocessing_eda.ipynb). 
+
 
 ### Related work
 
-
-> - What others have already done with the data?
-> - Why is your approach original?
-> - What source of inspiration do you take? Visualizations that you found on other websites or magazines (might be unrelated to your data).
-> - In case you are using a dataset that you have already explored in another context (ML or ADA course, semester project...), you are required to share the report of that work to outline the differences with the submission for this class.
-
-* [DB4Tennis](https://www.db4tennis.com/) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/) provide detailed records of tennis tournaments over the years. Although they give an option to filter, there is a lot of information and the data is shown using static tables. We would like to create more interactive visualizations and focus specifically on Grand Slam finals. Furthermore, DB4Tennis requires subscription to view the contents.
+* [DB4Tennis](https://www.db4tennis.com/) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/) provide detailed records of tennis tournaments over the years only for male players. Although they give an option to filter, there is a lot of information and the data is shown using static tables. We would like to create more interactive visualizations, focus specifically on Grand Slam finals and include the female players. Furthermore, DB4Tennis requires subscription to view the contents.
 
 * [Grand Slam Stats](https://jpvsilva88.github.io/tennis/) offers an interactive timeline plot showing the number of participants from up to 5 countries through the years for the 4 Grand Slam Tournaments. While we think it is a good idea to introduce a timeline for the data, we would like to show different statistics and allow filtering depending on time. This will allow the user to choose the time period (and range) to be displayed.
 
