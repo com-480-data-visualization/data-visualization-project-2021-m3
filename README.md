@@ -20,17 +20,17 @@ We created our dataset by scraping data from [Wikipedia](https://en.wikipedia.or
 - Information about the players dataset, both for [men](data/men_players_info.csv) and [women](data/women_players_info.csv) 
 - Statistics on the final match dataset, only for [men](data/men_match_stats.csv) 
 
-We also found an additional dataset containing the prize money for the Grand Slam finalists([Grand Slam prize money](https://github.com/popovichN/grand-slam-prize-money/blob/master/tennis_pay.csv)). However the prize values in the dataset are in different currencies and since they date starting from 1968 it is difficult to convert them using the exact exchange rates corresponding to the period. In addition the dataset has missing data since it contains entries only for the prize money from the tournaments from 1968 until 2015 (no data for 2016-2021). Therefore we are not certain if we would use this data set for now. 
-
 Unfortunately we weren't able to find a dataset or create one on our own for the statistics on the final match for the female players. Therefore we intend to continue on working with the datasets we have and provide visualizations for the data we managed to scrape.
 
-The obtained datasets including the information about the players(both male and female) have some missing data since they include records for tennis players that played in the Grand Slams dating from 1968. For some of the players we managed to fill in the missing information manually (directly in the csv file) by searching on the Internet, but for those that we didn't find any information such as exact date of birth or place of death, we left the fields empty (NaN). We also created some new fields by extracting information from already existing ones to ease the implementation when creating the visualizations.
+We also found an additional dataset containing the prize money for the Grand Slam finalists ([Grand Slam prize money](https://github.com/popovichN/grand-slam-prize-money/blob/master/tennis_pay.csv)). However the prize values in the dataset are in different currencies and it is also difficult to account for the inflation. In addition the dataset has missing data since it contains entries only for the prize money from the tournaments until 2015. Therefore we are not certain if we would use it for now. 
 
-The women and men finalists datasets didn't require a lot of preprocessing steps. We changed some of the strings into numerical values(the column Year), discarded the records from years before the Open Era(1968-) and changed the format of some of the tournament names. 
+The obtained datasets including the information about the players have some missing data since they include records for tennis players that played in the Grand Slams dating from 1968. For some of the players we managed to manually fill in some missing information such as exact date of birth, and we left it empty for the rest.
 
-The match statistics for men include a lot of numerical values, however we kept those values in our dataset as string objects since our initial plan is to use those stats only for displaying purposes. For further usage if we decide on using these statistics for deriving other statistics (for example aggregates), the values would need to be converted to numerical.
+The women and men finalists datasets didn't require a lot of preprocessing steps. We changed some of the strings into numerical values (the column Year), discarded the records from years before the Open Era (1968-) and changed the format of some of the tournament names. 
 
-The preprocessing and data-cleaning we did for our datasets can be found in the first part of the notebook [here](preprocessing_eda.ipynb).
+The match statistics for men include a lot of numerical values, however we kept those values in our dataset as string objects since our initial plan is to use them only for displaying purposes. For further usage if we decide on using these statistics for deriving other statistics, the values would need to be converted to numerical.
+
+The preprocessing and data-cleaning can be found in the first part of the notebook [here](preprocessing_eda.ipynb).
 
 ### Problematic
 
