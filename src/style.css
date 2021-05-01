@@ -1,0 +1,87 @@
+:root {
+	--theme-color-dark: rgb(141, 42, 38);
+	--theme-color-darkest: rgb(61, 11, 9);
+ 	--background-color: rgba(68, 11, 9, 0.109);
+}
+
+/* Maybe choose a better color palette, idk...
+	--theme-color-dark: rgb(45, 41, 124);
+	--theme-color-darkest: rgb(12, 9, 61);
+ 	--background-color: rgba(68, 11, 9, 0.144);
+*/
+
+html, body, figure {
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+/* Default font and size */
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	font-size: 1.1rem;
+	background-color: var(--background-color);
+}
+
+.width-limited {
+	max-width: 60rem;
+
+	/* Center horizontally: */
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Links: apply our theme color and remove underline */
+a {
+	color: var(--theme-color-dark);
+	text-decoration: none;
+}
+
+/* Top navigation bar */
+nav {
+	width: 100%;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+
+nav a {
+	color: var(--theme-color-darkest);
+}
+
+nav a:hover { 
+	color: var(--theme-color-dark); 
+}
+
+/* Style of the list of links in the navbar */
+nav ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: flex-end;
+}
+
+nav li {
+	margin-right: 3rem;
+}
+
+.menu {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.title {
+	width: 100%;
+	display: flex;
+	margin-left: 3rem;
+	
+}
+
+.title h1 {
+	font-size: 2.5rem;
+	color: var(--theme-color-dark);
+	font-family: 'Playfair Display', serif;
+}

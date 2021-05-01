@@ -30,7 +30,7 @@ The women and men finalists datasets didn't require a lot of preprocessing steps
 
 The match statistics for men include a lot of numerical values, however we kept those values in our dataset as string objects since our initial plan is to use them only for displaying purposes. For further usage if we decide on using these statistics for deriving other statistics, the values would need to be converted to numerical.
 
-The preprocessing and data-cleaning can be found in the first part of the notebook [here](preprocessing_eda.ipynb).
+The preprocessing and data-cleaning can be found in the first part of the notebook [here](notebooks/preprocessing_eda.ipynb).
 
 ### Problematic
 
@@ -89,8 +89,8 @@ Some examples we were inspired by but are not related to our topic:
 
 - *You should have an initial website running with the basic skeleton of the visualization/widgets.*
 
-- [ ] Start HTML
-- [ ] Basic CSS formating
+- [x] Start HTML – Marie
+- [x] Basic CSS formating – Marie
 - [ ] Import data about the matches
 - [ ] Make a class for Sankey diagram
 - [ ] Make a class for network graph
