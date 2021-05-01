@@ -58,7 +58,7 @@ We also tried to visualize the networks of players who encountered each other in
 
 On the margins of the cluster are players who did not play in the finals as often, perhaps only once. The disconnected parts are formed by players who were part of a final in which their appearance was somehow surprising, in the sense that neither of the players ever played against a more "popular" player.
 
-The Jupyter notebook for these analyses (and additional ones) can be found [here](preprocessing_eda.ipynb). 
+The Jupyter notebook for these analyses (and additional ones) can be found [here](notebooks/preprocessing_eda.ipynb). 
 
 
 ### Related work
