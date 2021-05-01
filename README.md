@@ -90,11 +90,10 @@ Some examples we were inspired by but are not related to our topic:
 - *You should have an initial website running with the basic skeleton of the visualization/widgets.*
 
 - [x] Start HTML – Marie
-- [x] Basic CSS formating – Marie
-- [ ] Import data about the matches
+- [x] Basic CSS formating - Marie
+- [ ] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush)
 - [ ] Make a class for Sankey diagram
 - [ ] Make a class for network graph
-- [ ] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush)
 - [ ] Implement switch to female data
 
 
