@@ -14,7 +14,7 @@ addEventListener('resize', function() {
 whenDocumentLoaded(() => {
   // Range slider; adapted from https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush
 
-  d3.csv('../data/men_finals.csv').then((data) => makeTimeline(data))
+  d3.csv('data/men_finals.csv').then((data) => makeTimeline(data))
 
   function makeTimeline(data) {
     let filtered = data.filter(d => {
