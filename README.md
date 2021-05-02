@@ -88,10 +88,9 @@ Some examples we were inspired by but are not related to our topic:
 *Functional project prototype review.* 
 
 - *You should have an initial website running with the basic skeleton of the visualization/widgets.*
-
 - [x] Start HTML – Marie
 - [x] Basic CSS formating - Marie
-- [ ] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush)
+- [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
 - [ ] Make a class for Sankey diagram
 - [ ] Make a class for network graph
 - [ ] Implement switch to female data
