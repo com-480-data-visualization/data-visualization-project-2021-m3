@@ -91,7 +91,7 @@ Some examples we were inspired by but are not related to our topic:
 - [x] Start HTML – Marie
 - [x] Basic CSS formating - Marie
 - [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
-- [ ] Make a class for Sankey diagram
+- [ ] Make a class for Sankey diagram - Ljupche
 - [ ] Make a class for network graph - Marija
 - [ ] Implement switch to female data
 
