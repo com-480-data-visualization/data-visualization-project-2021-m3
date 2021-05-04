@@ -1,6 +1,7 @@
 :root {
 	--theme-color-dark: rgb(141, 42, 38);
 	--theme-color-darkest: rgb(61, 11, 9);
+	--theme-color-light: rgb(204, 198, 198);
  	--background-color: rgba(68, 11, 9, 0.109);
 }
 
@@ -87,6 +88,27 @@ nav li {
 	font-family: 'Playfair Display', serif;
 }
 
+.buttons{
+	width: 100%;
+	display: flex; 
+	justify-content: center;
+}
+
+#button-female, #button-male {
+	margin: 1em;
+	background-color: var(--theme-color-dark); /* Green */
+	border: none;
+	color: white;
+	padding: 10px 32px;
+	text-align: center;
+	text-decoration: none;
+	font-size: 16px;
+  }
+
+#button-male {
+	margin-right: 1em;
+}
+
 text {
 	color: var(--theme-color-dark);
 }
@@ -117,41 +139,38 @@ rect.selection {
 
 }
 
-@media screen and (max-width: 600px) {
-	.width-limited {
-		max-width: 100%;
-	}
-}
-
-
 .link {
   stroke: #aaa;
 }
 
 .node text {
-stroke:#333;
-cursos:pointer;
+	stroke: rgb(88, 88, 88);
+	cursor: pointer;
 }
 
 .node circle{
-stroke:#fff;
-stroke-width:3px;
-fill:#555;
+	stroke:#fff;
+	stroke-width:3px;
+	fill: grey;
 }
 
-
 #info {
-    position:fixed;
-    left:150px;
-    top:20px;
-    z-index:1;
-    background: #f7f4f4;
+    position: fixed;
+    left: 150px;
+    top: 20px;
+    z-index: 1;
+    background: var(--theme-color-light);
     box-shadow: 10px 10px 5px #888888;
     display: none;
 }
 
 .graph {
-	position: absolute;
-  left: 0;
-  top: 200px;
+	display: flex;
+	justify-content: center;
+}
+
+@media screen and (max-width: 600px) {
+	.width-limited {
+		max-width: 100%;
+	}
 }

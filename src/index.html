@@ -5,24 +5,24 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<title>Grand Slam Finals</title>
+	<title>Game, Set & Match</title>
 	<meta name="description" content="Grand Slam Finals">
 	<meta name="author" content="M. Biolkova, M. Lazaroska, L. Milosheski">
-	<link rel="shortcut icon" href="#">
+	<link rel="icon" href="../data/logos/favicon.svg">
+
 	<link rel="stylesheet" href="style.css">
 	<link rel="preconnect" href="https://fonts.gstatic.com">
 	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<script src='main.js'></script>
 
 </head>
 <body>
 
 	<div class="menu">
 		<header class="title">
-			<h1> Grand Slam Finals </h1>
+			<h1> Game, Set & Match </h1>
 		</header>
 		<nav>
 			<ul class="width-limited">
@@ -34,14 +34,24 @@
 	</div>
 
 	<div class="width-limited">
-		<div id="timeline">
-		</div>
+		<div id="timeline"></div>
+		<div id="info"></div>
 	</div>
 
-<div id="info"></div>
+	<div class="buttons">
+		<button id="button-male" onclick="hackySolution(male)">Male</button>
+		<button id="button-female" onclick="hackySolution(female)">Female</button>
+	</div>
 
-<button onclick="hackySolution(male)">Male</button>
-<button onclick="hackySolution(female)">Female</button>
+<script type="text/javascript" src='timeline.js'></script>
 <script type="text/javascript" src='network.js'></script>
+
+<!-- adapt timeline when browser resized -->
+<script>
+	addEventListener('resize', function() {
+  		location.reload();
+	});
+</script>
+
 </body>
 </html>

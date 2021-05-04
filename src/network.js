@@ -1,15 +1,18 @@
 
-var width = 900,
-    height = 560;
+var height = 560;
+margin.top = 75;
 
 var svg = d3.select("body").append("svg")
     .attr("class","graph")
     .attr("width", width)
     .attr("height", height);
 
-
-svg.append("g").attr("class", "links");
-svg.append("g").attr("class", "nodes");
+svg.append("g")
+  .attr("class", "links")
+  .attr('transform', `translate(${margin.left}, ${margin.top})`);
+svg.append("g")
+  .attr("class", "nodes")
+  .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
 
 var simulation = d3.forceSimulation()
