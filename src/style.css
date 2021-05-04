@@ -50,8 +50,8 @@ nav a {
 	color: var(--theme-color-darkest);
 }
 
-nav a:hover { 
-	color: var(--theme-color-dark); 
+nav a:hover {
+	color: var(--theme-color-dark);
 }
 
 /* Style of the list of links in the navbar */
@@ -78,7 +78,7 @@ nav li {
 	width: 100%;
 	display: flex;
 	margin-left: 3rem;
-	
+
 }
 
 .title h1 {
@@ -121,4 +121,37 @@ rect.selection {
 	.width-limited {
 		max-width: 100%;
 	}
+}
+
+
+.link {
+  stroke: #aaa;
+}
+
+.node text {
+stroke:#333;
+cursos:pointer;
+}
+
+.node circle{
+stroke:#fff;
+stroke-width:3px;
+fill:#555;
+}
+
+
+#info {
+    position:fixed;
+    left:150px;
+    top:20px;
+    z-index:1;
+    background: #f7f4f4;
+    box-shadow: 10px 10px 5px #888888;
+    display: none;
+}
+
+.graph {
+	position: absolute;
+  left: 0;
+  top: 200px;
 }
