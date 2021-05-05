@@ -92,8 +92,9 @@ Some examples we were inspired by but are not related to our topic:
 - [x] Basic CSS formating - Marie
 - [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
 - [x] Make a class for Sankey diagram - Ljupche, Marie and VividD from StackOverflow <3
-- [ ] Make a class for network graph - Marija
-- [ ] Implement switch to female data
+- [x] Make a class for network graph - Marija
+- [ ] Fix switch to female data
+- [ ] Add titles to Sankey (Winner & Runner-Up)
 
 
 ## Milestone 3 (4th June, 5pm)
