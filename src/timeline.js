@@ -118,7 +118,7 @@ function createTimeline(data) {
     gBrush.call(brush.move, range.map(x))
   }
 
-var male = "../data/men_finals_OpenEra.csv";
-var female = "../data/women_finals_OpenEra.csv";
+var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
+var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
 
 createTimeline(male);

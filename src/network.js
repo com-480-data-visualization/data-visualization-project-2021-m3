@@ -23,7 +23,7 @@ var simulation = d3.forceSimulation()
       .on("tick", tick);
 
 
-function update(data){
+function __updateNetwork(data){
 
   d3.csv(data, function(json) {
     //load the csv as json
@@ -74,7 +74,7 @@ var circles = nodeElements.append("circle")
 
 var text = nodeElements.append("text")
                 .attr("class","textNode")
-                .text(function(d) { console.log(d.name);return d.name })
+                .text(function(d) { return d.name })
                 .attr("dx", 5)
                 .attr("dy", ".35em");
 
@@ -149,14 +149,17 @@ function dragended(d) {
   d.fx = null;
   d.fy = null;
   }
-var male = "../data/men_finals_OpenEra.csv";
-var female = "../data/women_finals_OpenEra.csv";
 
-function hackySolution(data) {
+
+
+var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
+var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
+
+function updateNetwork(data) {
   d3.selectAll(".link").remove();
   d3.selectAll(".node").remove();
-  update(data);
+  __updateNetwork(data);
   simulation.alpha(0.8).restart()
 }
 
-update(male);
+updateNetwork(male);

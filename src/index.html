@@ -39,12 +39,16 @@
 	</div>
 
 	<div class="buttons">
-		<button id="button-male" onclick="hackySolution(male)">Male</button>
-		<button id="button-female" onclick="hackySolution(female)">Female</button>
+		<button id="button-male" onclick="updateNetwork(male); updateSankey(male);">Male</button>
+		<button id="button-female" onclick="updateNetwork(female); updateSankey(female);">Female</button>
+	</div>
+	
+	<div id="sankey">
 	</div>
 
 <script type="text/javascript" src='timeline.js'></script>
 <script type="text/javascript" src='network.js'></script>
+<script type="text/javascript" src='sankey.js'></script>
 
 <!-- adapt timeline when browser resized -->
 <script>
