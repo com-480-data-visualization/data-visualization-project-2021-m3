@@ -1,3 +1,5 @@
+export { updateSankey }
+
 /// copied from https://bl.ocks.org/d3noob/5028304
 d3.sankey = function() {
   var sankey = {},
@@ -292,13 +294,13 @@ d3.sankey = function() {
   return sankey;
 };
 
-function makeSankey(URL) {
+function makeSankey(URL, range = [2015, 2021], gender = "M") {
 	d3.csv(URL, function(data) {
-		const minYear = 2015, maxYear = 2021, gender = 'M';
+		var minYear = range[0], maxYear = range[1];
 		var data = data.filter(tournamentData => {
 			if (tournamentData['Year'] < minYear) return false;
 			if (tournamentData['Year'] > maxYear) return false;
-			// xxTODOxx merge men and women csvs, and add filter for gender here
+			if (tournamentData['gender'] != gender) return false;
 			return true;
 		});
 
@@ -465,15 +467,11 @@ function makeSankey(URL) {
 			sankey.relayout();
 			link.attr("d", path);
 		}
+
 	});
 };
 
-function updateSankey(URL) {
+function updateSankey(URL, range, gender) {
 	d3.select('#sankey').selectAll('svg').remove();
-	makeSankey(URL);
+	makeSankey(URL, range, gender);
 }
-
-var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
-var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
-
-updateSankey(male);

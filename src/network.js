@@ -1,6 +1,13 @@
+export { updateNetwork }
 
 var height = 560;
-margin.top = 75;
+var width = 800;
+var margin = {
+  top: 50,
+  right: 40,
+  bottom: 150,
+  left: 60
+  }
 
 var svg = d3.select("body").append("svg")
     .attr("class","graph")
@@ -14,7 +21,6 @@ svg.append("g")
   .attr("class", "nodes")
   .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-
 var simulation = d3.forceSimulation()
       .force("link", d3.forceLink().distance(50))
       .force("charge", d3.forceManyBody().strength(-30))
@@ -23,15 +29,23 @@ var simulation = d3.forceSimulation()
       .on("tick", tick);
 
 
-function __updateNetwork(data){
-
+function __updateNetwork(data, range, gender){
   d3.csv(data, function(json) {
     //load the csv as json
     //array of nodes
     var nodes = [];
     //array of links
     var links = [];
-    json.forEach(function(d){
+    var minYear = range[0], maxYear = range[1];
+    // keep only data in selected range
+    var data = json.filter(d => {
+      if (d['Year'] < minYear) return false;
+      if (d['Year'] > maxYear) return false;
+      if (d['gender'] != gender) return false;
+      return true;
+    });
+
+    data.forEach(function(d){
     //check if node is present if not add that in the array to get unique nodes.
     if (nodes.indexOf(d.Winner.trim()) <0){
       //sorce node not there so add
@@ -150,16 +164,10 @@ function dragended(d) {
   d.fy = null;
   }
 
-
-
-var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
-var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
-
-function updateNetwork(data) {
+function updateNetwork(data, range = [2015, 2021], gender = "M") {
   d3.selectAll(".link").remove();
   d3.selectAll(".node").remove();
-  __updateNetwork(data);
+  __updateNetwork(data, range, gender);
   simulation.alpha(0.8).restart()
 }
 
-updateNetwork(male);

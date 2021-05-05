@@ -1,3 +1,11 @@
+import { updateSankey } from './sankey.js'
+import { updateNetwork } from './network.js'
+export { createTimeline }
+
+//var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
+//var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
+var data = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/combined_OpenEra.csv"
+
 const timelineElement = document.getElementById("timeline")
 
 var margin = {
@@ -6,10 +14,11 @@ var margin = {
     bottom: 150,
     left: 60
     }
-const width = timelineElement.clientWidth * 0.95,
+var width = timelineElement.clientWidth * 0.95,
 timeline_height = 80,
 h = 25,
-w = width - margin.left - margin.right
+w = width - margin.left - margin.right,
+r = [2015, 2021];
 
 var svg = d3.select("#timeline") 
             .append("svg")
@@ -18,7 +27,7 @@ var svg = d3.select("#timeline")
 let g = svg.append('g')
        .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
-function createTimeline(data) {
+function createTimeline(gender = "M") {
     let years = [];
     for (var i = 1968; i <= 2021; i++) {
         years.push(i);
@@ -29,17 +38,6 @@ function createTimeline(data) {
     var x = d3.scaleLinear()
         .domain(range)  
         .range([0, w]);
-   
-    /* Adds ticks to the timeline but idk, I prefer the minimalist appearance
-      g.append('g').selectAll('line')
-      .data(d3.range(range[0], range[1]+1))
-      .enter()
-      .append('line')
-      .attr('x1', d => x(d)).attr('x2', d => x(d))
-      .attr('y1', 0).attr('y2', h)
-      .style('stroke', '#3D0B09')
-      .style('opacity', '0.25')
-    */
 
     var labelL = g.append('text')
     .attr('id', 'labelleft')
@@ -65,8 +63,6 @@ function createTimeline(data) {
         // move brush handles      
         handle.attr("display", null).attr("transform", function(d, i) { return "translate(" + [ s[i], - h / 4] + ")"; });
         // update view
-        // if the view should only be updated after brushing is over, 
-        // move these two lines into the on('end') part below
         svg.node().value = s.map(d => Math.round(x.invert(d)));
         svg.node().dispatchEvent(new CustomEvent("input"));
       })
@@ -75,6 +71,8 @@ function createTimeline(data) {
         var d0 = d3.event.selection.map(x.invert);
         var d1 = d0.map(Math.round)
         d3.select(this).transition().call(d3.event.target.move, d1.map(x))
+        updateSankey(data, d1, gender); 
+        updateNetwork(data, d1, gender);
       })
 
     var gBrush = g.append("g")
@@ -116,9 +114,9 @@ function createTimeline(data) {
     }
 
     gBrush.call(brush.move, range.map(x))
+
   }
 
-var male = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_finals_OpenEra.csv";
-var female = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/women_finals_OpenEra.csv";
-
-createTimeline(male);
+createTimeline();
+updateSankey(data);
+updateNetwork(data);
