@@ -35,7 +35,7 @@
 
 	<div class="width-limited">
 		<div id="timeline"></div>
-		<div id="info"></div>
+		<input id = "search" type="text" placeholder="Search for a player...">
 	</div>
 
 	<div class="buttons">
@@ -44,17 +44,11 @@
 	</div>
 
 	<div id="sankey"> </div>
+	<div id="network"></div>
 
 <script type="module" src='timeline.js'></script>
 <script type="module" src='network.js'></script>
 <script type="module" src='sankey.js'></script>
-
-<!-- adapt timeline when browser resized -->
-<script>
-	addEventListener('resize', function() {
-  		location.reload();
-	});
-</script>
 
 </body>
 </html>

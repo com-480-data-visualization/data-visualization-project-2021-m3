@@ -98,7 +98,7 @@ nodeElements.on("mouseover", function(n){
 });
 nodeElements.on("mouseout", function(n){
   nodeElements.attr("opacity",1);
-  d3.select("#info").style("display", "none");
+  d3.select("#network").style("display", "none");
 });
 
 
@@ -120,7 +120,7 @@ function nodeOnMouseOver(d) {
         var newContent = "<p>" + d.name + "</p>";
         //console.log(d.name);
         //newContent += "<img src=data/player_images/"+d.name+".jpg alt=\""+d.name+"\">";
-        d3.select("#info").style("display", "block")
+        d3.select("#network").style("display", "block")
                           .style('top', d3.event.y - 12 + 'px')
                           .style('left', d3.event.x + 25 + 'px')
                           .html(newContent);
