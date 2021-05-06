@@ -121,8 +121,8 @@ function nodeOnMouseOver(d) {
         //console.log(d.name);
         //newContent += "<img src=data/player_images/"+d.name+".jpg alt=\""+d.name+"\">";
         d3.select("#info").style("display", "block")
-                          .style('top', d3.event.pageY - 12 + 'px')
-                          .style('left', d3.event.pageX + 25 + 'px')
+                          .style('top', d3.event.y - 12 + 'px')
+                          .style('left', d3.event.x + 25 + 'px')
                           .html(newContent);
 }
 
