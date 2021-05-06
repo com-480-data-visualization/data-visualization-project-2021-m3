@@ -79,28 +79,22 @@ Some examples we were inspired by but are not related to our topic:
 
 **10% of the final grade**
 
-*Two A4 pages describing the project goal.* 
+The report for Milestone 2 can be found [here]().
 
-- *Include sketches of the vizualiation you want to make in your final product.* 
-- *List the tools that you will use for each visualization and which (past or future) lectures you will need.* 
-- *Break down your goal into independent pieces to implement. Try to design a core visualization (minimal viable product) that will be required at the end. Then list extra ideas (more creative or challenging) that will enhance the visualization but could be dropped without endangering the meaning of the project.* 
+## Milestone 3 (4th June, 5pm)
 
-*Functional project prototype review.* 
-
-- *You should have an initial website running with the basic skeleton of the visualization/widgets.*
+**80% of the final grade**
 - [x] Start HTML – Marie
 - [x] Basic CSS formating - Marie
 - [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
 - [x] Make a class for Sankey diagram - Ljupche, Marie and VividD from StackOverflow <3
 - [x] Make a class for network graph - Marija
-- [ ] Fix switch to female data
+- [x] Fix switch to female data – Marie
 - [ ] Add titles to Sankey (Winner & Runner-Up)
-
-
-## Milestone 3 (4th June, 5pm)
-
-**80% of the final grade**
-
+- [ ] Weighted edges in network graph
+- [ ] Fix Sankey when many players have to be shown
+- [ ] Make search box functional
+- [ ] Add tournament logos to nodes
 
 ## Late policy
 
