@@ -79,7 +79,7 @@ Some examples we were inspired by but are not related to our topic:
 
 **10% of the final grade**
 
-The report for Milestone 2 can be found [here]().
+The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website [here](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/).
 
 ## Milestone 3 (4th June, 5pm)
 
