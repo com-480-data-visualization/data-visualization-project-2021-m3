@@ -154,7 +154,7 @@ rect.selection {
 	fill: grey;
 }
 
-#info {
+#network {
     position: fixed;
     left: 150px;
     top: 20px;
