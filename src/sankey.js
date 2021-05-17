@@ -164,11 +164,13 @@ d3.sankey = function() {
 		.sortKeys(d3.ascending)
 		.entries(nodes)
 		.map(function(d) { return d.values; });
-
+	
 	//
 	initializeNodeDepth();
+	
 	resolveCollisions();
-	for (var alpha = 1; iterations > 0; --iterations) {
+	
+	for (var alpha = 1; iterations > 0; --iterations) {  
 	  relaxRightToLeft(alpha *= .99);
 	  resolveCollisions();
 	  relaxLeftToRight(alpha);
@@ -256,7 +258,18 @@ d3.sankey = function() {
 	}
  
 	function ascendingDepth(a, b) {
-	  return a.y - b.y;
+		/// magic numbers
+		const map = {
+			'Australian Open': 7.2,
+			'French Open': 17,
+			'Wimbledon': 17.17,
+			'US Open': 72
+		}
+		if (a.name in map)
+			return map[a.name] >= map[b.name] ? +1 : -1;
+		if (a.other) return +1;
+		if (b.other) return -1;
+		return b.value - a.value;
 	}
   }
  
@@ -322,7 +335,9 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			var nodes = winners.concat(grandSlams).concat(runnerups).map(player => {
 				return {
 					'name': player[0],
-					'node': player[1]
+					'node': player[1],
+					'tournament': grandSlams.map(x => x[0]).includes(player[0]),
+					'other': false
 				};
 			});
 
@@ -388,7 +403,9 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 					otherIdsMap[type] = nodes.length;
 					nodes.push({
 						'name': 'Other ' + (type == 'L' ? 'Losers' : 'Winners'),
-						'node': nodes.length
+						'node': nodes.length,
+						'tournament': false,
+						'other': true
 					});
 				}
 				return otherIdsMap[type];
