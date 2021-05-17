@@ -1,5 +1,7 @@
 export { updateSankey }
 
+const topK = 8;
+
 /// copied from https://bl.ocks.org/d3noob/5028304
 d3.sankey = function() {
   var sankey = {},
@@ -114,7 +116,8 @@ d3.sankey = function() {
 	var remainingNodes = nodes,
 		nextNodes,
 		x = 0;
- 
+
+	
 	while (remainingNodes.length) {
 	  nextNodes = [];
 	  remainingNodes.forEach(function(node) {
@@ -161,7 +164,7 @@ d3.sankey = function() {
 		.sortKeys(d3.ascending)
 		.entries(nodes)
 		.map(function(d) { return d.values; });
- 
+
 	//
 	initializeNodeDepth();
 	resolveCollisions();
@@ -316,7 +319,7 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			var grandSlams = grandSlams.map((gs, idx) => [gs, idx + winners.length]);
 			var runnerups = runnerups.map((player, idx) => [player, idx + winners.length + grandSlams.length]);
 
-			const nodes = winners.concat(grandSlams).concat(runnerups).map(player => {
+			var nodes = winners.concat(grandSlams).concat(runnerups).map(player => {
 				return {
 					'name': player[0],
 					'node': player[1]
@@ -340,7 +343,8 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 						'target': type == 'Winner' ? gsIdx : playerIdx,
 						'value': finals.length,
 						'type': type == 'Winner' ? (finals.length > 1 ? 'Wins' : 'Win') : (finals.length > 1 ? 'Losses' : 'Loss'),
-						'years': finals.map(tournamentData => tournamentData['Year'])
+						'years': finals.map(tournamentData => tournamentData['Year']),
+						'other': false
 						}];
 					});
 				});
@@ -348,12 +352,143 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 
 			const winnerLinks = getLinkData('Winner', winners);
 			const runnerupLinks = getLinkData('Runnerup', runnerups);
-			const links = winnerLinks.concat(runnerupLinks);
+			var links = winnerLinks.concat(runnerupLinks);
+			
+			function getTop(data) {
+				return Object.entries(data.reduce((acc, cur) => {
+							if (cur['player'] in acc)
+								acc[cur['player']] += cur['value']
+							else
+								acc[cur['player']] = cur['value']
+							return acc;
+						}, {}))
+							.sort((f, s) => (f[1] >= s[1] ? -1 : +1))
+							.slice(0, topK);
+			}
+			
+			var topPlayers = new Set(getTop(winnerLinks).concat(getTop(runnerupLinks)).concat(grandSlams).map(x => x[0]));
+			var nodes = nodes.filter(x => topPlayers.has(x['name']));
+			var links = links.filter(x => topPlayers.has(x['player']));
+			var mapOldIdx = nodes.map(x => x['node']).map((oldIdx, idx) => [oldIdx, idx]).reduce((acc, cur) => {acc[cur[0]] = cur[1]; return acc;}, {});
+			
+			var nodes = nodes.map(x => {
+				x['node'] = mapOldIdx[x['node']];
+				return x;
+			});
 
-			var ret = {};
-			ret['nodes'] = nodes;
-			ret['links'] = links;
-			return ret;
+			var links = links.map(x => {
+				x['source'] = mapOldIdx[x['source']];
+				x['target'] = mapOldIdx[x['target']];
+				return x;
+			});
+			
+			var otherIdsMap = {};
+			function getOtherId(type) {
+				if (!(type in otherIdsMap)) {
+					otherIdsMap[type] = nodes.length;
+					nodes.push({
+						'name': 'Other ' + (type == 'L' ? 'Losers' : 'Winners'),
+						'node': nodes.length
+					});
+				}
+				return otherIdsMap[type];
+			}
+			
+			grandSlams.map(x => x[0]).forEach(tournamentName => {
+				var GSLinks = links.filter(x => x['tournament'] == tournamentName && topPlayers.has(x['player']));
+				var years = new Set(GSLinks.flatMap(x => x['years']));
+				var yearsData = data.filter(x => years.has(x['Year']) && x['Tournament'] == tournamentName);
+				var tournamentNodeId = nodes.filter(x => x['name'] == tournamentName)[0]['node'];
+				
+				var missingWinnersData = yearsData.filter(x => !topPlayers.has(x['Winner']));
+				var numMissingWinnersData = missingWinnersData.length;
+				if (numMissingWinnersData > 0) {
+					var missingWinnersData = reduceMissingPlayers(missingWinnersData, 'Winner');
+					var otherNodeId = getOtherId('W');
+					links.push({
+						'source': otherNodeId,
+						'target': tournamentNodeId,
+						'value': numMissingWinnersData,
+						'data': missingWinnersData,
+						'other': true
+					})
+				}
+				
+				var missingLosersData = yearsData.filter(x => !topPlayers.has(x['Runnerup']));
+				var numMissingLosersData = missingLosersData.length;
+				if (numMissingLosersData > 0) {
+					var missingLosersData = reduceMissingPlayers(missingLosersData, 'Runnerup');
+					var otherNodeId = getOtherId('L');
+					links.push({
+						'source': tournamentNodeId,
+						'target': otherNodeId,
+						'value': numMissingLosersData,
+						'data': missingLosersData,
+						'other': true
+					})
+				}
+				
+				function reduceMissingPlayers(data, type) {
+					return data.map(x => [x[type], x['Year']]).reverse().reduce((acc, cur) => {
+						if (!(cur[0] in acc))
+							acc[cur[0]] = []
+						acc[cur[0]].push(cur[1]);
+						return acc;
+					}, {});
+				}
+			});
+			
+			
+			// addOthers(false);
+			// addOthers(true);
+			
+			/// RIP this whole fn ):
+			function addOthers(swapDirection) {
+				var pushNewNode = false;
+				grandSlams.map(x => x[0]).forEach(tournamentName => {
+					var GSLinks = links.filter(x => x['tournament'] == tournamentName);
+					var moreLinks = GSLinks.filter(x => x['type'][0] == (!swapDirection ? 'W' : 'L'));
+					var lessLinks = GSLinks.filter(x => x['type'][0] == (!swapDirection ? 'L' : 'W'));
+					
+					var moreVal = moreLinks.map(x => x['value']).reduce((acc, cur) => acc + cur, 0);
+					var lessVal = lessLinks.map(x => x['value']).reduce((acc, cur) => acc + cur, 0);
+					if (lessVal >= moreVal) return;
+					pushNewNode = true;
+					
+					var type = !swapDirection ? 'Runnerup' : 'Winner';
+					var otherNode = nodes.length;
+					var tournamentNode = moreLinks[0][!swapDirection ? 'target' : 'source'];
+					
+					var moreYears = moreLinks.flatMap(x => x['years']);
+					var lessYears = lessLinks.flatMap(x => x['years']);
+					var diffYears = moreYears.filter(x => !lessYears.includes(x));
+					
+					var otherData = data.filter(x => x['Tournament'] == tournamentName && diffYears.includes(x['Year']));
+					var otherData = Object.entries(otherData.reduce((acc, cur) => {
+						if (cur[type] in acc)
+							acc[cur[type]].push(cur['Year']);
+						else
+							acc[cur[type]] = [cur['Year']];
+						return acc;
+					}, {})).sort((f, s) => (f[1].length >= s[1].length ? -1 : +1));
+					
+					links.push({
+						'other': true,
+						'source': !swapDirection ? tournamentNode : otherNode,
+						'target': !swapDirection ? otherNode : tournamentNode,
+						'value': diffYears.length,
+						'data': otherData
+					});
+				});
+				
+				if (pushNewNode)
+					nodes.push({
+						'node': nodes.length,
+						'name': 'Other ' + (!swapDirection ? 'Losers' : 'Winners')
+					})
+			}
+			
+			return {'nodes': nodes, 'links': links};
 		}
 
 		var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -361,13 +496,19 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 		height = 740 - margin.top - margin.bottom;
 
 		var edgeDescription = function(d) {
-			var ret = "";
-			if (d.type == 'Wins') ret += d.source.name + " @ " + d.target.name;
-			else ret += d.target.name + " @ " + d.source.name; // →
-			ret += "\n";
-			ret += d.value + ' Final ' + d.type;
-			ret += "\n";
-			ret += "Year" + (d.years.length > 1 ? "s" : "") + ": " + d.years.reverse().join(', ');
+			if (!d.other) {
+				var ret = "";
+				if (d.type == 'Wins') ret += d.source.name + " @ " + d.target.name;
+				else ret += d.target.name + " @ " + d.source.name; // →
+				ret += "\n";
+				ret += d.value + ' Final ' + d.type;
+				ret += "\n";
+				ret += "Year" + (d.years.length > 1 ? "s" : "") + ": " + d.years.reverse().join(', ');
+				return ret;
+			}
+			
+			var ret = "Other players\n";
+			ret += Object.entries(d.data).sort((f, s) => (f[1].length >= s[1].length ? -1 : +1)).map(x => '' + x[0] + ': ' + x[1].join(', ')).join('\n');
 			return ret;
 		},  color = d3.scaleOrdinal(d3.schemeCategory10);
 
