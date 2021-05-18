@@ -90,11 +90,12 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Make a class for Sankey diagram - Ljupche, Marie and VividD from StackOverflow <3
 - [x] Make a class for network graph - Marija
 - [x] Fix switch to female data – Marie
+- [x] Fix Sankey when many players have to be shown - Ljupche
+- [x] Make search box functional - Marie
 - [ ] Add titles to Sankey (Winner & Runner-Up)
 - [ ] Weighted edges in network graph
-- [x] Fix Sankey when many players have to be shown
-- [ ] Make search box functional
 - [ ] Add tournament logos to nodes
+- [ ] Add player profiles
 
 ## Late policy
 
