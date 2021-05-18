@@ -28,6 +28,8 @@ var simulation = d3.forceSimulation()
       .force('collision', d3.forceCollide().radius(10))
       .on("tick", tick);
 
+var linkScale = d3.scaleLinear()
+                  .range([0.1, 3]); // maybe choose something better
 
 function __updateNetwork(data, range, gender){
   d3.csv(data, function(json) {
@@ -35,7 +37,7 @@ function __updateNetwork(data, range, gender){
     //array of nodes
     var nodes = [];
     //array of links
-    var links = [];
+    var l = [];
     var minYear = range[0], maxYear = range[1];
     // keep only data in selected range
     var data = json.filter(d => {
@@ -56,16 +58,17 @@ function __updateNetwork(data, range, gender){
         //target node not there so add
         nodes.push(d.Runnerup.trim())
       }
-      //link to map the nodes with its index.
-      links.push({source:nodes.indexOf(d.Winner.trim()), target:nodes.indexOf(d.Runnerup.trim())})
+      // emit all pair combinations to count edge weights
+      l.push({source:nodes.indexOf(d.Winner.trim()), target:nodes.indexOf(d.Runnerup.trim())})
+      l.push({source:nodes.indexOf(d.Runnerup.trim()), target:nodes.indexOf(d.Winner.trim())})
     });
 
     nodes = nodes.map(function(n){
       return {name:n}
     });
-    //console.log(nodes);
 
     var players = nodes.map(x => x.name);
+    var links = l.groupBy(['source','target']) // count the number of face-off per player pair
 
     var link = svg.selectAll(".links")
                   .selectAll(".link")
@@ -73,7 +76,9 @@ function __updateNetwork(data, range, gender){
 
     link.enter().append("line")
         .attr("class", "link")
-        .style("stroke-width", function(d) { 5 });
+        .style("stroke-width", function(d) { 
+          return linkScale(d.values.length); // weighted edges
+        });
 
     link.exit().remove();
 
@@ -95,7 +100,7 @@ function __updateNetwork(data, range, gender){
                     .attr("dy", ".35em");
 
     nodeElements.on("mouseover", function(n){
-      nodeElements.attr("opacity",f=>{return f.name===n.name? 1 : 0.5;});
+      nodeElements.attr("opacity", f => { return f.name === n.name? 1 : 0.5; });
       nodeOnMouseOver(n);
     });
 
@@ -182,14 +187,38 @@ function dragended(d) {
   if (!d3.event.active) simulation.alphaTarget(0);
   d.fx = null;
   d.fy = null;
-s}
+}
 
 function updateNetwork(data, range = [2015, 2021], gender = "M") {
   d3.selectAll(".link").remove();
   d3.selectAll(".node").remove();
-  //d3.selectAll(".selected_node").remove();
   __updateNetwork(data, range, gender);
   simulation.alpha(0.8).restart()
 }
 
+// from https://stackoverflow.com/questions/43973917/group-by-with-multiple-fields-using-d3-js
+Array.prototype.groupBy = function (props) {
+  var arr = this;
+  var partialResult = {};
+  
+  arr.forEach(el=>{
+      var grpObj = {};
+
+      props.forEach(prop=>{
+            grpObj[prop] = el[prop]
+      });
+      
+      var key = JSON.stringify(grpObj);
+  
+      if(!partialResult[key]) partialResult[key] = [];
+      partialResult[key].push(el);
+  });
+
+  var finalResult = Object.keys(partialResult).map(key=>{
+     var keyObj = JSON.parse(key);
+     keyObj.values = partialResult[key];
+     return keyObj;
+  })
+  return finalResult;
+}
 
