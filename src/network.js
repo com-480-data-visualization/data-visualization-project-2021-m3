@@ -1,7 +1,7 @@
 export { updateNetwork }
 
-var height = 560;
-var width = 800;
+var height = 800;
+var width = 1200;
 var margin = {
   top: 50,
   right: 40,
@@ -23,7 +23,7 @@ svg.append("g")
 
 var simulation = d3.forceSimulation()
       .force("link", d3.forceLink().distance(50))
-      .force("charge", d3.forceManyBody().strength(-30))
+      .force("charge", d3.forceManyBody().strength(-69))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(10))
       .on("tick", tick);

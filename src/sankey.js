@@ -572,6 +572,7 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 		var node = svg.append("g").selectAll(".node")
 						.data(sankeyData.nodes)
 						.enter().append("g")
+						.attr("id", function(d) { return "node:" + d.name})
 						.attr("class", "node")
 						.attr("transform", function(d) { 
 							return "translate(" + d.x + "," + d.y + ")";
@@ -579,14 +580,15 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 						.call(d3.drag()
 								.subject(subject)
 								.on("start", function () {
-									d3.event.sourceEvent.stopPropagation(); // silence other listeners
+									/// d3.event.sourceEvent.stopPropagation(); // silence other listeners
 									// idk what ^^ does
-									if (d3.event.sourceEvent.which == 1)
-										dragInitiated = true;
+									/// if (d3.event.sourceEvent.which == 1)
+									/// 	dragInitiated = true;
 									this.parentNode.appendChild(this);
 								})
-								.on("drag", dragmove));
-		function subject(d) {return { x: d3.event.x, y: d3.event.y }};
+								.on("drag", dragmove)
+								.on("end", endclick));
+		function subject(d) {return { x: d.x, y: d.y }};
 								// xxTODOxx double click resets the position
 								// 0 -> d3.event.x to keep the old position
 
@@ -604,6 +606,7 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 
 		// add in the title for the nodes
 		node.append("text")
+			.attr("id", function(d) { return "text:" + d.name})
 			.attr("x", -6)
 			.attr("y", function(d) { return d.dy / 2; })
 			.attr("dy", ".35em")
@@ -613,6 +616,31 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			.filter(function(d) { return d.x < width / 2; })
 			.attr("x", 6 + sankey.nodeWidth())
 			.attr("text-anchor", "start");
+		
+		/**
+		var playerInformationText =
+			node.append("text")
+			.attr("fill", "black")
+			.attr("y", function(d) { return 0.8 * d.dy; })
+			.attr("x", 6 + sankey.nodeWidth())
+			.attr("text-anchor", "start")
+			.attr("visibility", "hidden")
+			.text(function(d) { return generatePlayerDescription(d.name) })
+		
+		playerInformationText
+			.append("set")
+			.attr("attributeName", "visibility")
+			.attr("from", "hidden")
+			.attr("to", "visible")
+			.attr("begin", function (d) { return "node:" + d.name + ".mouseover"})
+			.attr("end", function (d) { return "node:" + d.name + ".mouseout"});
+		
+		function generatePlayerDescription(playerName) {
+			return ">>><i>" + playerName + "</i>";
+		}
+		**/
+		
+			
 
 		// the function for moving the nodes
 		function dragmove(d) {
@@ -621,9 +649,25 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 					   d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
 					) + "," + (
 						   d.y = Math.max(0, Math.min(height - d.dy, d3.event.y))
-					) + ")");
+					) + ")")
+					.attr("dragged", "True");
 			sankey.relayout();
 			link.attr("d", path);
+		}
+		
+		function endclick(d) {
+			var wasDragged = d3.select(this).attr("dragged");
+			d3.select(this).attr("dragged", "False");
+			if (wasDragged && wasDragged == "True") return;
+			
+			/// a man's gotta do what a man's gotta do
+			var playerName = d3.select(this).select('text')._groups[0][0].innerHTML;
+			if (["Australian Open", "French Open", "Wimbledon", "US Open"].includes(playerName)) return;
+			
+			var popup = document.getElementById("info:" + playerName);
+			console.log(popup);
+			popup.classList.toggle("show");
+			console.log(popup);
 		}
 
 	});
