@@ -92,7 +92,7 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Fix switch to female data – Marie
 - [ ] Add titles to Sankey (Winner & Runner-Up)
 - [ ] Weighted edges in network graph
-- [ ] Fix Sankey when many players have to be shown
+- [x] Fix Sankey when many players have to be shown
 - [ ] Make search box functional
 - [ ] Add tournament logos to nodes
 
