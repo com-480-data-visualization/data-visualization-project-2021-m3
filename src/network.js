@@ -133,8 +133,8 @@ function find_player(players){
       .filter(function(d) {
         return (d.name === searched_player);
       })
-      .attr("class", "selected_node")
-    // do something better
+      .attr("stroke", "red") // TO DO: do something better
+      .attr("fill", "red")
   }
 }
 
@@ -187,6 +187,7 @@ s}
 function updateNetwork(data, range = [2015, 2021], gender = "M") {
   d3.selectAll(".link").remove();
   d3.selectAll(".node").remove();
+  //d3.selectAll(".selected_node").remove();
   __updateNetwork(data, range, gender);
   simulation.alpha(0.8).restart()
 }

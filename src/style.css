@@ -148,22 +148,10 @@ rect.selection {
 	cursor: pointer;
 }
 
-.selected_node text {
-	stroke: red;
-	fill: red;
-	cursor: pointer;
-}
-
 .node circle{
 	stroke:#fff;
 	stroke-width:3px;
 	fill: grey;
-}
-
-.selected_node circle{
-	stroke:#fff;
-	stroke-width:3px;
-	fill: red;
 }
 
 #network {
