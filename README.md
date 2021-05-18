@@ -84,8 +84,6 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 ## Milestone 3 (30th May, 5pm)
 
 **80% of the final grade**
-- [x] Start HTML – Marie
-- [x] Basic CSS formating - Marie
 - [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
 - [x] Make a class for Sankey diagram - Ljupche, Marie and VividD from StackOverflow <3
 - [x] Make a class for network graph - Marija
