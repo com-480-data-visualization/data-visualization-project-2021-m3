@@ -148,10 +148,22 @@ rect.selection {
 	cursor: pointer;
 }
 
+.selected_node text {
+	stroke: red;
+	fill: red;
+	cursor: pointer;
+}
+
 .node circle{
 	stroke:#fff;
 	stroke-width:3px;
 	fill: grey;
+}
+
+.selected_node circle{
+	stroke:#fff;
+	stroke-width:3px;
+	fill: red;
 }
 
 #network {
@@ -167,6 +179,14 @@ rect.selection {
 .graph {
 	display: flex;
 	justify-content: center;
+}
+
+/* jQuery autocomplete */
+ul.ui-autocomplete {
+	list-style: none;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 @media screen and (max-width: 600px) {

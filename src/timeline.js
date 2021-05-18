@@ -30,7 +30,7 @@ class Timeline {
     }
   
     this.range = [d3.min(this.years), d3.max(this.years) + 1];
-    this.range_selection = [2015, 2021]; // change to this.range when Sankey works
+    this.range_selection = [1968, 2021]; // change to this.range when Sankey works
     
     this.x = d3.scaleLinear()
         .domain(this.range)  
