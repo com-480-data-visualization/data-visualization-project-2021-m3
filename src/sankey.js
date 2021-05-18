@@ -572,7 +572,6 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 		var node = svg.append("g").selectAll(".node")
 						.data(sankeyData.nodes)
 						.enter().append("g")
-						.attr("id", function(d) { return "node:" + d.name})
 						.attr("class", "node")
 						.attr("transform", function(d) { 
 							return "translate(" + d.x + "," + d.y + ")";
@@ -659,15 +658,29 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			var wasDragged = d3.select(this).attr("dragged");
 			d3.select(this).attr("dragged", "False");
 			if (wasDragged && wasDragged == "True") return;
-			
 			/// a man's gotta do what a man's gotta do
 			var playerName = d3.select(this).select('text')._groups[0][0].innerHTML;
 			if (["Australian Open", "French Open", "Wimbledon", "US Open"].includes(playerName)) return;
+			var coordinates = this.children[1].getBoundingClientRect();
+			var popup = document.getElementById("infobox");
+			if (!popup.innerHTML.includes(playerName))
+				popup.classList.add("show");
+			else
+				popup.classList.toggle("show");
+			popup.style.position = "absolute";
+			popup.style.left = (d3.event.x+150)+'px';
+			popup.style.top = d3.event.y+'px';
+			popup.innerHTML = generatePlayerDescription(playerName);
 			
-			var popup = document.getElementById("info:" + playerName);
-			console.log(popup);
-			popup.classList.toggle("show");
-			console.log(popup);
+			function generatePlayerDescription(playerName) {
+				const base_url = '../data/player_images/';
+				var image_url = base_url + playerName + '.jpg';
+				
+				var ret = playerName;
+				ret += '\n';
+				ret += '<img src="' + image_url + '" style="width:250px;height:300px;">';
+				return ret;
+			}
 		}
 
 	});
