@@ -139,7 +139,7 @@ rect.selection {
 
 }
 
-.link {
+.links {
   stroke: #aaa;
 }
 
@@ -175,6 +175,13 @@ ul.ui-autocomplete {
     list-style-type: none;
     padding: 0px;
     margin: 0px;
+}
+
+.lens {
+	stroke: gray;
+	stroke-width: 2.0px;
+	stroke-opacity: 0;
+	fill: none;
 }
 
 @media screen and (max-width: 600px) {

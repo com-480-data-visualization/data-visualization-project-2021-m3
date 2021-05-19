@@ -26,10 +26,17 @@ var simulation = d3.forceSimulation()
       .force("charge", d3.forceManyBody().strength(-69))
       .force("center", d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(10))
-      .on("tick", tick);
 
 var linkScale = d3.scaleLinear()
                   .range([0.1, 3]); // maybe choose something better
+
+var fisheye = d3.fisheye.circular()
+  .radius(150)
+  .distortion(5);
+
+var lens = svg.append("circle")
+  .attr("class","lens")
+  .attr("r", fisheye.radius());;
 
 function __updateNetwork(data, range, gender){
   d3.csv(data, function(json) {
@@ -63,37 +70,50 @@ function __updateNetwork(data, range, gender){
       l.push({source:nodes.indexOf(d.Runnerup.trim()), target:nodes.indexOf(d.Winner.trim())})
     });
 
+    // for nodes proportional to number of appearances
+    var groupped = d3.nest()
+        .key(function(d) { return d.source; })
+        .rollup(function(d) { return d.length; })
+        .entries(l);
+
     nodes = nodes.map(function(n){
-      return {name:n}
+      return { 
+        name: n,
+        value: groupped[nodes.indexOf(n)].value
+      }
     });
 
     var players = nodes.map(x => x.name);
-    var links = l.groupBy(['source','target']) // count the number of face-off per player pair
+    var edges = l.groupBy(['source','target']) // count the number of face-off per player pair
 
     var link = svg.selectAll(".links")
                   .selectAll(".link")
-                  .data(links)
-
-    link.enter().append("line")
+                  .data(edges)
+        .enter().append("line")
         .attr("class", "link")
         .style("stroke-width", function(d) { 
           return linkScale(d.values.length); // weighted edges
-        });
+        })
+        .attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; })
 
     link.exit().remove();
 
     var node = svg.selectAll(".nodes")
                   .selectAll(".node")
                   .data(nodes)
+                  .enter().append("g")
+					        .attr("class", "node");
+
     node.exit().remove();
 
-    var nodeElements = node.enter().append("g")
-                            .attr("class", "node");
+    var nodeElements = node.append("circle")
+                            .attr("class", "circle")
+                            .attr("r", function(d) { return Math.max(d.value, 8) });
 
-    var circles = nodeElements.append("circle")
-                              .attr("r","8");
-
-    var text = nodeElements.append("text")
+    var text = node.append("text")
                     .attr("class","textNode")
                     .text(function(d) { return d.name })
                     .attr("dx", 5)
@@ -109,12 +129,49 @@ function __updateNetwork(data, range, gender){
       d3.select("#network").style("display", "none");
     });
 
-    simulation.nodes(nodes);
-
+    // execute force simulation
+    simulation.nodes(nodes).on("tick", () => tick());;
     simulation.force("link")
-              .links(links);
+              .links(edges);
+    //simulation.restart();
 
-    simulation.restart();
+    d3.select("#button").on("click", function() {
+      // fisheye zoom
+      simulation.nodes(nodes).on("tick", () => tick(false));;
+      simulation.force("link")
+                .links(edges);
+      magnify();
+    })
+
+    function magnify() {
+      lens.style("stroke-opacity", "0");
+
+      svg.on("mousemove", function() {
+        fisheye.focus(d3.mouse(this));
+
+        var mouseX = d3.mouse(this)[0];
+        var mouseY = d3.mouse(this)[1];
+        var r = fisheye.radius();
+
+        lens.attr("cx", mouseX)
+            .attr("cy", mouseY);
+
+        nodeElements.each(function(d) { 
+          d.fisheye = fisheye(d); 
+        })
+          .attr("cx", function(d) { return d.fisheye.x - d.x; })
+          .attr("cy", function(d) { return d.fisheye.y - d.y; })
+          //.attr("r", function(d) { return d.fisheye.z * 4.5; });
+
+        text.attr("dx", function(d) { return d.fisheye.x - d.x; })
+          .attr("dy", function(d) { return d.fisheye.y - d.y ; });
+
+        link.attr("x1", function(d) { return d.source.fisheye.x; })
+          .attr("y1", function(d) { return d.source.fisheye.y; })
+          .attr("x2", function(d) { return d.target.fisheye.x; })
+          .attr("y2", function(d) { return d.target.fisheye.y; });
+      });
+    }
 
     $("#search").autocomplete({
       source: players
@@ -153,7 +210,7 @@ function nodeOnMouseOver(d) {
                     .html(newContent);
 }
 
-function tick() {
+function tick(drag) {
   var node = svg.select(".nodes").selectAll(".node");
   var link = svg.select(".links").selectAll(".link");
 
@@ -166,10 +223,13 @@ function tick() {
       .attr("y2", function(d) { return d.target.y; });
 
   node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-      .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended));
+
+  if (drag) {
+    node.call(d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended));
+  }
 };
 
 function dragstarted(d) {
