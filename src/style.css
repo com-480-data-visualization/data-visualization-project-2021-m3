@@ -242,3 +242,7 @@ ul.ui-autocomplete {
   from {opacity: 0;}
   to {opacity:1 ;}
 }
+
+.infoTitle {
+	font-size: 1.5rem;
+}
