@@ -383,6 +383,8 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			const winnerLinks = getLinkData('Winner', winners);
 			const runnerupLinks = getLinkData('Runnerup', runnerups);
 			
+			
+			
 			function getTop(data) {
 				return Object.entries(data.reduce((acc, cur) => {
 							if (cur['player'] in acc)
@@ -465,13 +467,11 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 				return x;
 			});
 			
-						var links = links.map(x => {
+			var links = links.map(x => {
 				x['source'] = mapOldIdx[x['source']];
 				x['target'] = mapOldIdx[x['target']];
 				return x;
 			});
-			
-			console.log(nodes.length);
 			
 			/**
 			var winnerTopK = getTop(winnerLinks);
@@ -544,56 +544,6 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 				}
 			});
 			**/
-			
-			
-			// addOthers(false);
-			// addOthers(true);
-			
-			/// RIP this whole fn ):
-			function addOthers(swapDirection) {
-				var pushNewNode = false;
-				grandSlams.map(x => x[0]).forEach(tournamentName => {
-					var GSLinks = links.filter(x => x['tournament'] == tournamentName);
-					var moreLinks = GSLinks.filter(x => x['type'][0] == (!swapDirection ? 'W' : 'L'));
-					var lessLinks = GSLinks.filter(x => x['type'][0] == (!swapDirection ? 'L' : 'W'));
-					
-					var moreVal = moreLinks.map(x => x['value']).reduce((acc, cur) => acc + cur, 0);
-					var lessVal = lessLinks.map(x => x['value']).reduce((acc, cur) => acc + cur, 0);
-					if (lessVal >= moreVal) return;
-					pushNewNode = true;
-					
-					var type = !swapDirection ? 'Runnerup' : 'Winner';
-					var otherNode = nodes.length;
-					var tournamentNode = moreLinks[0][!swapDirection ? 'target' : 'source'];
-					
-					var moreYears = moreLinks.flatMap(x => x['years']);
-					var lessYears = lessLinks.flatMap(x => x['years']);
-					var diffYears = moreYears.filter(x => !lessYears.includes(x));
-					
-					var otherData = data.filter(x => x['Tournament'] == tournamentName && diffYears.includes(x['Year']));
-					var otherData = Object.entries(otherData.reduce((acc, cur) => {
-						if (cur[type] in acc)
-							acc[cur[type]].push(cur['Year']);
-						else
-							acc[cur[type]] = [cur['Year']];
-						return acc;
-					}, {})).sort((f, s) => (f[1].length >= s[1].length ? -1 : +1));
-					
-					links.push({
-						'other': true,
-						'source': !swapDirection ? tournamentNode : otherNode,
-						'target': !swapDirection ? otherNode : tournamentNode,
-						'value': diffYears.length,
-						'data': otherData
-					});
-				});
-				
-				if (pushNewNode)
-					nodes.push({
-						'node': nodes.length,
-						'name': 'Other ' + (!swapDirection ? 'Losers' : 'Winners')
-					})
-			}
 			
 			return {'nodes': nodes, 'links': links};
 		}
