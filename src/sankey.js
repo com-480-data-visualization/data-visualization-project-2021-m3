@@ -565,7 +565,12 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 			}
 			
 			var ret = "Other players\n";
-			ret += Object.entries(d.data).sort((f, s) => (f[1].length >= s[1].length ? -1 : +1)).map(x => '' + x[0] + ': ' + x[1].join(', ')).join('\n');
+			ret += d.data.sort((f, s) => {
+				if (f[1].length < s[1].length) return +1;
+				if (f[1].length > s[1].length) return -1;
+				if (f[1][0] < s[1][0]) return +1;
+				return -1;
+			}).map(x => [x[0], x[1].reverse()]).map(x => '' + x[0] + ': ' + x[1].join(', ')).join('\n');
 			return ret;
 		},  color = d3.scaleOrdinal(d3.schemeCategory10);
 
