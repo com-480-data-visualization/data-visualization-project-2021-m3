@@ -1,7 +1,8 @@
 import { updateSankey } from './sankey.js'
-import { updateNetwork } from './network.js'
+import { Network } from './network.js'
 
 var data = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/combined_OpenEra.csv"
+var graph = new Network("body");    
 
 var margin = {
     top: 10,
@@ -30,7 +31,6 @@ class Timeline {
     }
   
     this.range = [d3.min(this.years), d3.max(this.years) + 1];
-    this.range_selection = [1968, 2021]; // change to this.range when Sankey works
     
     this.x = d3.scaleLinear()
         .domain(this.range)  
@@ -86,8 +86,8 @@ class Timeline {
     }
 
     initPlots(gender) {
-      updateSankey(data, this.range_selection, gender); 
-      updateNetwork(data, this.range_selection, gender);
+      updateSankey(data, this.range, gender); 
+      graph.updateNetwork(data, this.range, gender);
       this.gender = gender;
     }
 
@@ -106,13 +106,15 @@ class Timeline {
 
     updateData(event) {
         var actual = event.selection.map(this.x.invert);
-        var rounded = actual.map(Math.round)
-        d3.select("brush").transition().call(event.target.move, rounded.map(this.x))
-        updateSankey(data, rounded, this.gender); 
-        updateNetwork(data, rounded, this.gender);
+        var selection = actual.map(Math.round) // year selection
+        d3.select("brush").transition().call(event.target.move, selection.map(this.x))
+        updateSankey(data, selection, this.gender); 
 
-        this.range_selection = rounded;
+        graph.updateNetwork(data, selection, this.gender);
+
+        this.range = selection;
     }
+
 
     brushResizePath(d) {
       // add brush handles (from https://bl.ocks.org/Fil/2d43867ba1f36a05459c7113c7f6f98a)
