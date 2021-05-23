@@ -310,7 +310,7 @@ d3.sankey = function() {
   return sankey;
 };
 
-function makeSankey(URL, range = [2015, 2021], gender = "M") {
+function makeSankey(URL, range = [1968, 2021], gender = "M") {
 	const menDataURL = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_players_info.csv";
 	d3.csv(URL, function(_, data) {
 		const _data = data;
@@ -733,18 +733,32 @@ function makeSankey(URL, range = [2015, 2021], gender = "M") {
 					const playerInfo = getPlayerInfo(playerName);
 
 					var ret = '<div class="infoTitle">' + playerName + '</div>';
-					ret += '<img src="' + image_url + '" style="width:250px;height:300px;">';
+					ret += '<img src="' + image_url + '"class=player_image>';
 					ret += '<table>';
 					ret += '<tbody>';
 					ret += '<tr>';
-					ret += '<td>';
-					ret += '<div class="wrap">';
-					ret += '<div class="table-label" style="width: 50%">' + 'Birth date:' + '</div>';
-					ret += '<div class="table-value">' + playerInfo.birth_date + '</div>';
-					ret += '</div>';
-					ret += '</td>';
+					ret += '<td>' + 'Birth date:' + '</td>';
+					ret += '<td>' + playerInfo.birth_date + '</td>';
 					ret += '</tr>';
 					ret += '<tr>';
+					ret += '<td>' + 'Country:' + '</td>';
+					ret += '<td>' + playerInfo.country + '</td>';
+					ret += '</tr>';
+					ret += '<tr>';
+					ret += '<td>' + 'Residence:' + '</td>';
+					ret += '<td>' + playerInfo.residence + '</td>';
+					ret += '</tr>';
+					ret += '<tr>';
+					ret += '<td>' + 'Height:' + '</td>';
+					ret += '<td>' + playerInfo.height + '</td>';
+					ret += '</tr>';
+					ret += '<tr>';
+					ret += '<td>' + 'Playing style:' + '</td>';
+					ret += '<td>' + playerInfo.play_style + '</td>';
+					ret += '</tr>';
+					ret += '<tr>';
+					ret += '<td>' + 'Turned Pro:' + '</td>';
+					ret += '<td>' + playerInfo.turned_pro + '</td>';
 					ret += '</tr>';
 					ret += '</tbody>';
 					ret += '</table>';
