@@ -143,15 +143,18 @@ rect.selection {
   stroke: #aaa;
 }
 
-.node text {
+#textNode {
 	stroke: rgb(88, 88, 88);
-	cursor: pointer;
 }
 
 .node circle{
 	stroke:#fff;
 	stroke-width:3px;
 	fill: grey;
+}
+
+.node circle:hover {
+	fill:red;
 }
 
 #network {

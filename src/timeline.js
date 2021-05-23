@@ -156,7 +156,7 @@ whenDocumentLoaded(() => {
     })
 
     d3.select("#button").on("click", function() {
-      graph.magnify(); // fisheye zoom
+      graph.magnifier_on_off(); // fisheye zoom
     })    
 });
 

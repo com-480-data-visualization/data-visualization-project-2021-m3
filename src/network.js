@@ -42,6 +42,8 @@ class Network {
       .attr("class","lens")
       .attr("r", this.fisheye.radius());
 
+    // show or hide node labels
+    this.text_opacity = 0;
   }
 
   rebuildNetwork() {
@@ -67,31 +69,51 @@ class Network {
 					        .attr("class", "node");
     this.node.exit().remove();
 
-    this.nodeElements = this.node.append("circle")
-                            .attr("class", "circle")
-                            .attr("r", function(d) { return Math.max(d.value, 8) });
-
     this.text = this.node.append("text")
                     .attr("class","textNode")
                     .text(function(d) { return d.name })
-                    .attr("dx", 5)
-                    .attr("dy", ".35em");
-
-    // nodeElements.on("mouseover", function(n){
-    //   nodeElements.attr("opacity", f => { return f.name === n.name? 1 : 0.5; });
-    //   nodeOnMouseOver(n);
-    // });
-
-    // nodeElements.on("mouseout", function(n){
-    //   nodeElements.attr("opacity",1);
-    //   d3.select("#network").style("display", "none");
-    // });
+                    .attr("dx", function(d) { return d.value + 12 })
+                    .attr("dy", ".35em")
+                    .attr("opacity", this.text_opacity)
 
     // execute force simulation
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));
     this.simulation.force("link")
               .links(this.edges);
-    }
+
+    // find neighbours of each node
+    let linkedByIndex = {};
+    this.edges.forEach((d) => {
+      linkedByIndex[`${d.source.index},${d.target.index}`] = true;
+    });
+    this.neighbours = linkedByIndex;
+
+    this.nodeElements = this.node.append("circle")
+      .attr("class", "circle")
+      .attr("r", function(d) { return Math.max(d.value, 8) })
+      .on("mouseover", function(i){
+        self.text.attr('opacity', function (d) { 
+          if (self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d) || i.index === d.index) {
+            return 1
+          } else { return self.text_opacity }
+        }).style('fill',  function (d) { return i.index === d.index ? 'black' : 'grey';})
+        self.link.style('stroke', function (d) { return d.source.index === i.index || d.target.index === i.index ? 'red' : 'grey';
+      })})
+      // highlight neighbours on hover
+      .on('mouseout', function (d) {
+        self.link.style("stroke", "grey")
+        self.text.attr('opacity', self.text_opacity)
+                 .style('fill', 'grey')
+      });
+  }
+
+  isConnectedAsSource(a, b) {
+    return this.neighbours[`${a.index},${b.index}`];
+  }
+  
+  isConnectedAsTarget(a, b) {
+    return this.neighbours[`${b.index},${a.index}`];
+  }
 
   tick(drag) {
     this.node = this.svg.select(".nodes").selectAll(".node");
@@ -107,6 +129,7 @@ class Network {
   
     this.node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
   
+    // execute drag simulation if dragging allowed
     if (drag) {
       var self = this;
       this.node.call(d3.drag()
@@ -134,9 +157,9 @@ class Network {
   }
 
   updateNetwork(data, range, gender) {
+    // loads data according to the user-specified time range and gender
     var nodes = [];
     var l = []; // array of links
-
     var self = this;
   
     d3.csv(data, function(json) {
@@ -174,8 +197,8 @@ class Network {
       nodes = nodes.map(function(n){
         return { 
           name: n,
-          value: groupped[nodes.indexOf(n)].value
-        }
+          value: groupped[nodes.indexOf(n)].value // number of matches of a player (for node weights)
+        } 
       });
       var edges = l.groupBy(['source','target']); // count the number of face-offs per player pair
 
@@ -187,18 +210,45 @@ class Network {
     this.nodes = nodes;
     this.edges = edges;
     this.players = nodes.map(x => x.name);
+
     d3.selectAll(".link").remove();
     d3.selectAll(".node").remove();
+
     this.magnify_off();
     this.rebuildNetwork();
     this.simulation.alpha(1.5).restart()
+
+    // autocomplete & event listener for search box
+    $("#search").autocomplete({
+      source: this.players
+    });
+
+    var self = this;
+    $("#search").keyup(function (e) {
+      if (e.keyCode == 13) {
+        self.find_player();
+      }
+    });
+  }
+
+  magnifier_on_off() {
+    if(this.magnifier == "on") {
+      this.magnify_off(); 
+   } else {
+    this.magnify(); // fisheye zoom
+   }
   }
 
   magnify() {
+    this.magnifier = "on"; 
+
     // stop force simulation and turn off dragging 
     this.simulation.stop()
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(false));;
     this.node.on(".drag", null)
+
+    this.text.attr('opacity', 1) // shows all player names in graph
+    this.text_opacity = 1; 
 
     var self = this;
     this.svg.on("mousemove", function() {
@@ -216,10 +266,11 @@ class Network {
       })
         .attr("cx", function(d) { return d.fisheye.x - d.x; })
         .attr("cy", function(d) { return d.fisheye.y - d.y; })
-        //.attr("r", function(d) { return d.fisheye.z * 4.5; });
+        //.attr("r", function(d) { return d.fisheye.z * 4.5; }); // doesn't keep the proportionality of nodes (obviously)
 
-      self.text.attr("dx", function(d) { return d.fisheye.x - d.x; })
-        .attr("dy", function(d) { return d.fisheye.y - d.y ; });
+      self.text.attr("dx", function(d) { return d.fisheye.x - 0.96*d.x; })
+        .attr("dy", function(d) { return d.fisheye.y - d.y ; })
+        //.attr("font-size", function(d) { return d.fisheye.z * 11; }) // this is painfully slow :( 
 
       self.link.attr("x1", function(d) { return d.source.fisheye.x; })
         .attr("y1", function(d) { return d.source.fisheye.y; })
@@ -229,47 +280,33 @@ class Network {
   }
 
   magnify_off() {
+    this.magnifier = "off";
+
     // turn on dragging
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));;
     this.simulation.force("link")
               .links(this.edges);
-    this.svg.on("mousemove", null)
+    this.svg.on("mousemove", null) // turn off zooming
+    this.simulation.restart();
+
+    this.text_opacity = 0; // hide node labels
+  }
+
+  find_player(){
+    // get the searched player
+    var searched_player = $('#search').val();
+
+    if (this.players.indexOf(searched_player) != -1){
+      // highlight player 
+      d3.selectAll(".node")
+        .filter(function(d) {
+          return (d.name === searched_player);
+        })
+        .attr("stroke", "red") // TO DO: do something better
+        .attr("fill", "red")
+    }
   }
 }
-//     $("#search").autocomplete({
-//       source: players
-//     });
-
-//     $("#search").keyup(function (e) {
-//       if (e.keyCode == 13) {
-//         find_player(players);
-//       }
-//     });
-
-// function find_player(players){
-//   // get the searched player
-//   var searched_player = $('#search').val();
-
-//   if (players.indexOf(searched_player) != -1){
-//     // zoom and highlight player 
-//     d3.selectAll(".node")
-//       .filter(function(d) {
-//         return (d.name === searched_player);
-//       })
-//       .attr("stroke", "red") // TO DO: do something better
-//       .attr("fill", "red")
-//   }
-// }
-
-// function nodeOnMouseOver(d) {
-//   var newContent = "<p>" + d.name + "</p>";
-//   //console.log(d.name);
-//   //newContent += "<img src=data/player_images/"+d.name+".jpg alt=\""+d.name+"\">";
-//   d3.select("#network").style("display", "block")
-//                     .style('top', d3.event.y - 12 + 'px')
-//                     .style('left', d3.event.x + 25 + 'px')
-//                     .html(newContent);
-// }
 
 // groupping on multiple preoperties of an object
 // from https://stackoverflow.com/questions/43973917/group-by-with-multiple-fields-using-d3-js
