@@ -88,10 +88,9 @@ class Network {
     // });
 
     // execute force simulation
-    this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));;
+    this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));
     this.simulation.force("link")
               .links(this.edges);
-    //this.simulation.restart();
     }
 
   tick(drag) {
@@ -114,7 +113,7 @@ class Network {
       .on("start", (d) => self.dragstarted(d)) 
       .on("drag", (d) => self.dragged(d))
       .on("end", (d) => self.dragended(d)));
-    }
+    } 
   }
   
   dragstarted(d) {
@@ -192,14 +191,14 @@ class Network {
     d3.selectAll(".node").remove();
     this.magnify_off();
     this.rebuildNetwork();
-    this.simulation.alpha(0.8).restart()
+    this.simulation.alpha(1.5).restart()
   }
 
   magnify() {
+    // stop force simulation and turn off dragging 
+    this.simulation.stop()
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(false));;
-    this.simulation.force("link")
-              .links(this.edges);
-    this.lens.style("stroke-opacity", "0");
+    this.node.on(".drag", null)
 
     var self = this;
     this.svg.on("mousemove", function() {
@@ -230,6 +229,7 @@ class Network {
   }
 
   magnify_off() {
+    // turn on dragging
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));;
     this.simulation.force("link")
               .links(this.edges);
@@ -271,7 +271,7 @@ class Network {
 //                     .html(newContent);
 // }
 
-// groupping on multiple preprties of an object
+// groupping on multiple preoperties of an object
 // from https://stackoverflow.com/questions/43973917/group-by-with-multiple-fields-using-d3-js
 Array.prototype.groupBy = function (props) {
   var arr = this;
