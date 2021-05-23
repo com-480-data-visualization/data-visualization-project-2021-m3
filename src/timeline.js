@@ -154,7 +154,10 @@ whenDocumentLoaded(() => {
     d3.select("#button-male").on("click", function() {
       plot_timeline.initPlots("M")
     })
-    
+
+    d3.select("#button").on("click", function() {
+      graph.magnify(); // fisheye zoom
+    })    
 });
 
 addEventListener('resize', function() {

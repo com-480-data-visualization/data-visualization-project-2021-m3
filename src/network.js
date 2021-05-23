@@ -190,49 +190,52 @@ class Network {
     this.players = nodes.map(x => x.name);
     d3.selectAll(".link").remove();
     d3.selectAll(".node").remove();
+    this.magnify_off();
     this.rebuildNetwork();
     this.simulation.alpha(0.8).restart()
   }
+
+  magnify() {
+    this.simulation.nodes(this.nodes).on("tick", () => this.tick(false));;
+    this.simulation.force("link")
+              .links(this.edges);
+    this.lens.style("stroke-opacity", "0");
+
+    var self = this;
+    this.svg.on("mousemove", function() {
+      self.fisheye.focus(d3.mouse(this));
+
+      var mouseX = d3.mouse(this)[0];
+      var mouseY = d3.mouse(this)[1];
+      var r = self.fisheye.radius();
+
+      self.lens.attr("cx", mouseX)
+          .attr("cy", mouseY);
+
+      self.nodeElements.each(function(d) { 
+        d.fisheye = self.fisheye(d); 
+      })
+        .attr("cx", function(d) { return d.fisheye.x - d.x; })
+        .attr("cy", function(d) { return d.fisheye.y - d.y; })
+        //.attr("r", function(d) { return d.fisheye.z * 4.5; });
+
+      self.text.attr("dx", function(d) { return d.fisheye.x - d.x; })
+        .attr("dy", function(d) { return d.fisheye.y - d.y ; });
+
+      self.link.attr("x1", function(d) { return d.source.fisheye.x; })
+        .attr("y1", function(d) { return d.source.fisheye.y; })
+        .attr("x2", function(d) { return d.target.fisheye.x; })
+        .attr("y2", function(d) { return d.target.fisheye.y; });
+    });
+  }
+
+  magnify_off() {
+    this.simulation.nodes(this.nodes).on("tick", () => this.tick(true));;
+    this.simulation.force("link")
+              .links(this.edges);
+    this.svg.on("mousemove", null)
+  }
 }
-
-//     d3.select("#button").on("click", function() {
-//       // fisheye zoom
-//       simulation.nodes(nodes).on("tick", () => tick(false));;
-//       simulation.force("link")
-//                 .links(edges);
-//       magnify();
-//     })
-
-//     function magnify() {
-//       lens.style("stroke-opacity", "0");
-
-//       svg.on("mousemove", function() {
-//         fisheye.focus(d3.mouse(this));
-
-//         var mouseX = d3.mouse(this)[0];
-//         var mouseY = d3.mouse(this)[1];
-//         var r = fisheye.radius();
-
-//         lens.attr("cx", mouseX)
-//             .attr("cy", mouseY);
-
-//         nodeElements.each(function(d) { 
-//           d.fisheye = fisheye(d); 
-//         })
-//           .attr("cx", function(d) { return d.fisheye.x - d.x; })
-//           .attr("cy", function(d) { return d.fisheye.y - d.y; })
-//           //.attr("r", function(d) { return d.fisheye.z * 4.5; });
-
-//         text.attr("dx", function(d) { return d.fisheye.x - d.x; })
-//           .attr("dy", function(d) { return d.fisheye.y - d.y ; });
-
-//         link.attr("x1", function(d) { return d.source.fisheye.x; })
-//           .attr("y1", function(d) { return d.source.fisheye.y; })
-//           .attr("x2", function(d) { return d.target.fisheye.x; })
-//           .attr("y2", function(d) { return d.target.fisheye.y; });
-//       });
-//     }
-
 //     $("#search").autocomplete({
 //       source: players
 //     });
