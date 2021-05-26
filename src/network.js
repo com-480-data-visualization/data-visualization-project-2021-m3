@@ -1,3 +1,4 @@
+
 export { Network }
 
 var height = 800;
@@ -53,7 +54,7 @@ class Network {
                   .data(this.edges)
                   .enter().append("line")
                   .attr("class", "link")
-                  .style("stroke-width", function(d) { 
+                  .style("stroke-width", function(d) {
                     return self.linkScale(d.values.length); // weighted edges
                   })
                   .attr("x1", function(d) { return d.source.x; })
@@ -92,7 +93,7 @@ class Network {
       .attr("class", "circle")
       .attr("r", function(d) { return Math.max(d.value, 8) })
       .on("mouseover", function(i){
-        self.text.attr('opacity', function (d) { 
+        self.text.attr('opacity', function (d) {
           if (self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d) || i.index === d.index) {
             return 1
           } else { return self.text_opacity }
@@ -110,7 +111,7 @@ class Network {
   isConnectedAsSource(a, b) {
     return this.neighbours[`${a.index},${b.index}`];
   }
-  
+
   isConnectedAsTarget(a, b) {
     return this.neighbours[`${b.index},${a.index}`];
   }
@@ -118,38 +119,38 @@ class Network {
   tick(drag) {
     this.node = this.svg.select(".nodes").selectAll(".node");
     this.link = this.svg.select(".links").selectAll(".link");
-  
+
     this.node.attr("cx", function(d) { return d.x = Math.max(5, Math.min(width - 5, d.x)); })
         .attr("cy", function(d) { return d.y = Math.max(5, Math.min(height - 5, d.y)); });
-  
+
     this.link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
         .attr("x2", function(d) { return d.target.x; })
         .attr("y2", function(d) { return d.target.y; });
-  
+
     this.node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-  
+
     // execute drag simulation if dragging allowed
     if (drag) {
       var self = this;
       this.node.call(d3.drag()
-      .on("start", (d) => self.dragstarted(d)) 
+      .on("start", (d) => self.dragstarted(d))
       .on("drag", (d) => self.dragged(d))
       .on("end", (d) => self.dragended(d)));
-    } 
+    }
   }
-  
+
   dragstarted(d) {
     if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
-  
+
   dragged(d) {
     d.fx = d3.event.x;
     d.fy = d3.event.y;
   }
-  
+
   dragended(d) {
     if (!d3.event.active) this.simulation.alphaTarget(0);
     d.fx = null;
@@ -161,7 +162,7 @@ class Network {
     var nodes = [];
     var l = []; // array of links
     var self = this;
-  
+
     d3.csv(data, function(json) {
       var minYear = range[0], maxYear = range[1];
       // keep only data in selected range
@@ -171,7 +172,7 @@ class Network {
         if (d['gender'] != gender) return false;
         return true;
       });
-  
+
       data.forEach(function(d){
         //check if node is present if not add that in the array to get unique nodes.
         if (nodes.indexOf(d.Winner.trim()) < 0){
@@ -187,18 +188,18 @@ class Network {
         l.push({source:nodes.indexOf(d.Winner.trim()), target:nodes.indexOf(d.Runnerup.trim())})
         l.push({source:nodes.indexOf(d.Runnerup.trim()), target:nodes.indexOf(d.Winner.trim())})
       });
-  
+
       // for nodes proportional to number of appearances
       var groupped = d3.nest()
           .key(function(d) { return d.source; })
           .rollup(function(d) { return d.length; })
           .entries(l);
-  
+
       nodes = nodes.map(function(n){
-        return { 
+        return {
           name: n,
           value: groupped[nodes.indexOf(n)].value // number of matches of a player (for node weights)
-        } 
+        }
       });
       var edges = l.groupBy(['source','target']); // count the number of face-offs per player pair
 
@@ -233,22 +234,25 @@ class Network {
 
   magnifier_on_off() {
     if(this.magnifier == "on") {
-      this.magnify_off(); 
+      this.magnify_off();
+
    } else {
     this.magnify(); // fisheye zoom
+    
+
    }
   }
 
   magnify() {
-    this.magnifier = "on"; 
+    this.magnifier = "on";
 
-    // stop force simulation and turn off dragging 
+    // stop force simulation and turn off dragging
     this.simulation.stop()
     this.simulation.nodes(this.nodes).on("tick", () => this.tick(false));;
     this.node.on(".drag", null)
 
     this.text.attr('opacity', 1) // shows all player names in graph
-    this.text_opacity = 1; 
+    this.text_opacity = 1;
 
     var self = this;
     this.svg.on("mousemove", function() {
@@ -261,8 +265,8 @@ class Network {
       self.lens.attr("cx", mouseX)
           .attr("cy", mouseY);
 
-      self.nodeElements.each(function(d) { 
-        d.fisheye = self.fisheye(d); 
+      self.nodeElements.each(function(d) {
+        d.fisheye = self.fisheye(d);
       })
         .attr("cx", function(d) { return d.fisheye.x - d.x; })
         .attr("cy", function(d) { return d.fisheye.y - d.y; })
@@ -270,7 +274,7 @@ class Network {
 
       self.text.attr("dx", function(d) { return d.fisheye.x - 0.96*d.x; })
         .attr("dy", function(d) { return d.fisheye.y - d.y ; })
-        //.attr("font-size", function(d) { return d.fisheye.z * 11; }) // this is painfully slow :( 
+        //.attr("font-size", function(d) { return d.fisheye.z * 11; }) // this is painfully slow :(
 
       self.link.attr("x1", function(d) { return d.source.fisheye.x; })
         .attr("y1", function(d) { return d.source.fisheye.y; })
@@ -297,7 +301,7 @@ class Network {
     var searched_player = $('#search').val();
 
     if (this.players.indexOf(searched_player) != -1){
-      // highlight player 
+      // highlight player
       d3.selectAll(".node")
         .filter(function(d) {
           return (d.name === searched_player);
@@ -313,16 +317,16 @@ class Network {
 Array.prototype.groupBy = function (props) {
   var arr = this;
   var partialResult = {};
-  
+
   arr.forEach(el=>{
       var grpObj = {};
 
       props.forEach(prop=>{
             grpObj[prop] = el[prop]
       });
-      
+
       var key = JSON.stringify(grpObj);
-  
+
       if(!partialResult[key]) partialResult[key] = [];
       partialResult[key].push(el);
   });
@@ -334,4 +338,3 @@ Array.prototype.groupBy = function (props) {
   })
   return finalResult;
 }
-

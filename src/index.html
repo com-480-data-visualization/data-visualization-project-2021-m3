@@ -23,11 +23,11 @@
 
 </head>
 <body>
-
 	<div class="menu">
 		<header class="title">
-			<h1> Game, Set & Match </h1>
+			<h1> Game, Set & Match </h1><img id="icon" src="../data/img/site_logo.png" alt="tennis icon">
 		</header>
+
 		<nav>
 			<ul class="width-limited">
 				<li><a href="index.html">Home</a></li>
@@ -37,27 +37,50 @@
 		</nav>
 	</div>
 
-	<div class="width-limited">
-		<div id="timeline"></div>
-		<input id = "search" type="text" placeholder="Search for a player...">
-	</div>
-
-	<div class="buttons">
-		<button id="button-male">Male</button>
-		<button id="button-female">Female</button>
-	</div>
-	
 	<div class="popup">
 	  <span class="popuptext" id="infobox">Popup text...</span>
 	</div>
 
-	<div id="sankey"> </div>
-	<div id="network"></div>
-	<button id="button">Magnifier On/Off</button>
+	<div id="sankey_div">
+		<div id="sankey_titles">
+			<div id="winners">
+				<text>Winners</text>
+			</div>
+			<div id="runnerups">
+				<text>Runner-ups</text>
+			</div>
+	 </div>
 
+	</div>
+
+	<div id="network">
+			<button id="button">Magnifier</button>
+	</div>
+
+
+
+
+
+<div class="bottom">
+	<input id = "search" type="text" placeholder="Search for a player...">
+	<div class="timeline_div">
+
+		<div id="timeline"></div>
+
+	</div>
+	<label class="switch">
+	<input type="checkbox" id="switchButton">
+	<div class="slider round">
+	<span class="on">MALE</span>
+	<span class="off">FEMALE</span>
+	</div>
+	</label>
+
+</div>
 <script type="module" src='timeline.js'></script>
 <script type="module" src='network.js'></script>
 <script type="module" src='sankey.js'></script>
+
 
 </body>
 </html>

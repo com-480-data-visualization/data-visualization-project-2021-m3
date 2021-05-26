@@ -2,7 +2,7 @@ import { updateSankey } from './sankey.js'
 import { Network } from './network.js'
 
 var data = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/combined_OpenEra.csv"
-var graph = new Network("body");    
+var graph = new Network("#network");
 
 var margin = {
     top: 10,
@@ -18,22 +18,22 @@ var width = document.getElementById("timeline").clientWidth * 0.95,
 
 class Timeline {
   constructor(element) {
-    this.svg = d3.select(element) 
+    this.svg = d3.select(element)
             .append("svg")
                 .attr("width", width)
                 .attr("height", timeline_height)
     this.g = this.svg.append('g')
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
-      
+
     this.years = [];
     for (var i = 1968; i <= 2021; i++) {
         this.years.push(i);
     }
-  
+
     this.range = [d3.min(this.years), d3.max(this.years) + 1];
-    
+
     this.x = d3.scaleLinear()
-        .domain(this.range)  
+        .domain(this.range)
         .range([0, w]);
 
     this.labelL = this.g.append('text')
@@ -73,7 +73,7 @@ class Timeline {
       .attr("cursor", "ew-resize")
       .attr("d", this.brushResizePath);
 
-      // override default behaviour - clicking outside of the selected area 
+      // override default behaviour - clicking outside of the selected area
       // will select a small piece there rather than deselecting everything
       // https://bl.ocks.org/mbostock/6498000
       gBrush.selectAll(".overlay")
@@ -86,7 +86,7 @@ class Timeline {
     }
 
     initPlots(gender) {
-      updateSankey(data, this.range, gender); 
+      updateSankey(data, this.range, gender);
       graph.updateNetwork(data, this.range, gender);
       this.gender = gender;
     }
@@ -97,7 +97,7 @@ class Timeline {
         .text(Math.round(this.x.invert(selection[0])))
       this.labelR.attr('x', selection[1])
         .text(Math.round(this.x.invert(selection[1])) - 1)
-      // move brush handles      
+      // move brush handles
       this.handle.attr("display", null).attr("transform", function(d, i) { return "translate(" + [ selection[i], - h / 4] + ")"; });
       // update view
       this.svg.node().value = selection.map(d => Math.round(this.x.invert(d)));
@@ -108,7 +108,7 @@ class Timeline {
         var actual = event.selection.map(this.x.invert);
         var selection = actual.map(Math.round) // year selection
         d3.select("brush").transition().call(event.target.move, selection.map(this.x))
-        updateSankey(data, selection, this.gender); 
+        updateSankey(data, selection, this.gender);
 
         graph.updateNetwork(data, selection, this.gender);
 
@@ -132,7 +132,7 @@ class Timeline {
       x0 = cx - dx / 2,
       x1 = cx + dx / 2;
       d3.select(this.parentNode).call(brush.move, x1 > width ? [width - dx, width] : x0 < 0 ? [0, dx] : [x0, x1]);
-    }    
+    }
   }
 
 function whenDocumentLoaded(action) {
@@ -144,20 +144,33 @@ function whenDocumentLoaded(action) {
   }
 }
 
-whenDocumentLoaded(() => { 
+whenDocumentLoaded(() => {
     var plot_timeline = new Timeline("#timeline");
 
-    d3.select("#button-female").on("click", function() {
-      plot_timeline.initPlots("F")
+    d3.select("#switchButton").on("change", function() {
+      if(this.checked){
+        plot_timeline.initPlots("M")
+      }else{
+        plot_timeline.initPlots("F")
+      }
     })
 
-    d3.select("#button-male").on("click", function() {
+    /*d3.select("#button-male").on("click", function() {
       plot_timeline.initPlots("M")
-    })
-
+    })*/
+    var clicked=false;
     d3.select("#button").on("click", function() {
       graph.magnifier_on_off(); // fisheye zoom
-    })    
+      if(clicked){
+        $(this).css('background-color', 'white');
+        $(this).css('color', '#171515');
+        clicked  = false;
+    } else {
+        $(this).css('background-color', '#171515');
+        $(this).css('color', 'white');
+        clicked  = true;
+    }
+    })
 });
 
 addEventListener('resize', function() {

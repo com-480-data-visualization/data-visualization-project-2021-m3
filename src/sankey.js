@@ -10,37 +10,37 @@ d3.sankey = function() {
 	  size = [1, 1],
 	  nodes = [],
 	  links = [];
- 
+
   sankey.nodeWidth = function(_) {
 	if (!arguments.length) return nodeWidth;
 	nodeWidth = +_;
 	return sankey;
   };
- 
+
   sankey.nodePadding = function(_) {
 	if (!arguments.length) return nodePadding;
 	nodePadding = +_;
 	return sankey;
   };
- 
+
   sankey.nodes = function(_) {
 	if (!arguments.length) return nodes;
 	nodes = _;
 	return sankey;
   };
- 
+
   sankey.links = function(_) {
 	if (!arguments.length) return links;
 	links = _;
 	return sankey;
   };
- 
+
   sankey.size = function(_) {
 	if (!arguments.length) return size;
 	size = _;
 	return sankey;
   };
- 
+
   sankey.layout = function(iterations) {
 	computeNodeLinks();
 	computeNodeValues();
@@ -49,15 +49,15 @@ d3.sankey = function() {
 	computeLinkDepths();
 	return sankey;
   };
- 
+
   sankey.relayout = function() {
 	computeLinkDepths();
 	return sankey;
   };
- 
+
   sankey.link = function() {
 	var curvature = .5;
- 
+
 	function link(d) {
 	  var x0 = d.source.x + d.source.dx,
 		  x1 = d.target.x,
@@ -71,16 +71,16 @@ d3.sankey = function() {
 		   + " " + x3 + "," + y1
 		   + " " + x1 + "," + y1;
 	}
- 
+
 	link.curvature = function(_) {
 	  if (!arguments.length) return curvature;
 	  curvature = +_;
 	  return link;
 	};
- 
+
 	return link;
   };
- 
+
   // Populate the sourceLinks and targetLinks for each node.
   // Also, if the source and target are not objects, assume they are indices.
   function computeNodeLinks() {
@@ -97,7 +97,7 @@ d3.sankey = function() {
 	  target.targetLinks.push(link);
 	});
   }
- 
+
   // Compute the value (size) of each node by summing the associated links.
   function computeNodeValues() {
 	nodes.forEach(function(node) {
@@ -107,7 +107,7 @@ d3.sankey = function() {
 	  );
 	});
   }
- 
+
   // Iteratively assign the breadth (x-position) for each node.
   // Nodes are assigned the maximum breadth of incoming neighbors plus one;
   // nodes with no incoming links are assigned breadth zero, while
@@ -117,7 +117,7 @@ d3.sankey = function() {
 		nextNodes,
 		x = 0;
 
-	
+
 	while (remainingNodes.length) {
 	  nextNodes = [];
 	  remainingNodes.forEach(function(node) {
@@ -130,12 +130,12 @@ d3.sankey = function() {
 	  remainingNodes = nextNodes;
 	  ++x;
 	}
- 
+
 	//
 	moveSinksRight(x);
 	scaleNodeBreadths((size[0] - nodeWidth) / (x - 1));
   }
- 
+
   function moveSourcesRight() {
 	nodes.forEach(function(node) {
 	  if (!node.targetLinks.length) {
@@ -143,7 +143,7 @@ d3.sankey = function() {
 	  }
 	});
   }
- 
+
   function moveSinksRight(x) {
 	nodes.forEach(function(node) {
 	  if (!node.sourceLinks.length) {
@@ -151,49 +151,49 @@ d3.sankey = function() {
 	  }
 	});
   }
- 
+
   function scaleNodeBreadths(kx) {
 	nodes.forEach(function(node) {
 	  node.x *= kx;
 	});
   }
- 
+
   function computeNodeDepths(iterations) {
 	var nodesByBreadth = d3.nest()
 		.key(function(d) { return d.x; })
 		.sortKeys(d3.ascending)
 		.entries(nodes)
 		.map(function(d) { return d.values; });
-	
+
 	//
 	initializeNodeDepth();
-	
+
 	resolveCollisions();
-	
-	for (var alpha = 1; iterations > 0; --iterations) {  
+
+	for (var alpha = 1; iterations > 0; --iterations) {
 	  relaxRightToLeft(alpha *= .99);
 	  resolveCollisions();
 	  relaxLeftToRight(alpha);
 	  resolveCollisions();
 	}
- 
+
 	function initializeNodeDepth() {
 	  var ky = d3.min(nodesByBreadth, function(nodes) {
 		return (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value);
 	  });
- 
+
 	  nodesByBreadth.forEach(function(nodes) {
 		nodes.forEach(function(node, i) {
 		  node.y = i;
 		  node.dy = node.value * ky;
 		});
 	  });
- 
+
 	  links.forEach(function(link) {
 		link.dy = link.value * ky;
 	  });
 	}
- 
+
 	function relaxLeftToRight(alpha) {
 	  nodesByBreadth.forEach(function(nodes, breadth) {
 		nodes.forEach(function(node) {
@@ -203,12 +203,12 @@ d3.sankey = function() {
 		  }
 		});
 	  });
- 
+
 	  function weightedSource(link) {
 		return center(link.source) * link.value;
 	  }
 	}
- 
+
 	function relaxRightToLeft(alpha) {
 	  nodesByBreadth.slice().reverse().forEach(function(nodes) {
 		nodes.forEach(function(node) {
@@ -218,12 +218,12 @@ d3.sankey = function() {
 		  }
 		});
 	  });
- 
+
 	  function weightedTarget(link) {
 		return center(link.target) * link.value;
 	  }
 	}
- 
+
 	function resolveCollisions() {
 	  nodesByBreadth.forEach(function(nodes) {
 		var node,
@@ -231,7 +231,7 @@ d3.sankey = function() {
 			y0 = 0,
 			n = nodes.length,
 			i;
- 
+
 		// Push any overlapping nodes down.
 		nodes.sort(ascendingDepth);
 		for (i = 0; i < n; ++i) {
@@ -240,12 +240,12 @@ d3.sankey = function() {
 		  if (dy > 0) node.y += dy;
 		  y0 = node.y + node.dy + nodePadding;
 		}
- 
+
 		// If the bottommost node goes outside the bounds, push it back up.
 		dy = y0 - nodePadding - size[1];
 		if (dy > 0) {
 		  y0 = node.y -= dy;
- 
+
 		  // Push any overlapping nodes back up.
 		  for (i = n - 2; i >= 0; --i) {
 			node = nodes[i];
@@ -256,7 +256,7 @@ d3.sankey = function() {
 		}
 	  });
 	}
- 
+
 	function ascendingDepth(a, b) {
 		/// magic numbers
 		const map = {
@@ -272,7 +272,7 @@ d3.sankey = function() {
 		return b.value - a.value;
 	}
   }
- 
+
   function computeLinkDepths() {
 	nodes.forEach(function(node) {
 	  node.sourceLinks.sort(ascendingTargetDepth);
@@ -289,24 +289,24 @@ d3.sankey = function() {
 		ty += link.dy;
 	  });
 	});
- 
+
 	function ascendingSourceDepth(a, b) {
 	  return a.source.y - b.source.y;
 	}
- 
+
 	function ascendingTargetDepth(a, b) {
 	  return a.target.y - b.target.y;
 	}
   }
- 
+
   function center(node) {
 	return node.y + node.dy / 2;
   }
- 
+
   function value(link) {
 	return link.value;
   }
- 
+
   return sankey;
 };
 
@@ -319,7 +319,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 			/// this is crazy
 			/// idk what is happening and how it works
 			/// if anything is renamed, it no longer works
-			
+
 			var minYear = range[0], maxYear = range[1];
 			var data = data.filter(tournamentData => {
 				if (tournamentData['Year'] < minYear) return false;
@@ -339,7 +339,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				var winners = winners.map((player, idx) => [player, idx]);
 				var grandSlams = grandSlams.map((gs, idx) => [gs, idx + winners.length]);
 				var runnerups = runnerups.map((player, idx) => [player, idx + winners.length + grandSlams.length]);
-				
+
 				var nodes = winners.map(player => {
 					return {
 						'name': player[0],
@@ -353,7 +353,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 						'node': gs[1],
 						'type': 'tournament',
 						'other': false
-					
+
 					}
 				})).concat(runnerups.map(player => {
 					return {
@@ -390,9 +390,9 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 
 				const winnerLinks = getLinkData('Winner', winners);
 				const runnerupLinks = getLinkData('Runnerup', runnerups);
-				
-				
-				
+
+
+
 				function getTop(data) {
 					return Object.entries(data.reduce((acc, cur) => {
 								if (cur['player'] in acc)
@@ -405,7 +405,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 								.slice(0, topK)
 								.map(x => x[0]);
 				}
-				
+
 				var otherIdsMap = {};
 				function getOtherId(type) {
 					if (!(type in otherIdsMap)) {
@@ -419,12 +419,12 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					}
 					return otherIdsMap[type];
 				}
-				
+
 				var links = [];
 				grandSlams.map(x => x[0]).forEach(tournamentName => {
 					var tournamentWinnerLinks = winnerLinks.filter(x => x.tournament == tournamentName);
 					var tournamentNodeId = tournamentWinnerLinks[0].target;
-					
+
 					var winnersTopK = getTop(tournamentWinnerLinks);
 					var winnersData = [];
 					tournamentWinnerLinks.forEach(x => {
@@ -432,7 +432,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							links.push(x);
 							return;
 						}
-						
+
 						winnersData.push([x.player, x.years]);
 					});
 					if (winnersData.length > 0)
@@ -443,10 +443,10 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							'data': winnersData,
 							'other': true
 						});
-					
+
 					var tournamentRunnerupLinks = runnerupLinks.filter(x => x.tournament == tournamentName);
 					var tournamentNodeId = tournamentRunnerupLinks[0].source;
-					
+
 					var runnerupsTopK = getTop(tournamentRunnerupLinks);
 					var runnerupsData = [];
 					tournamentRunnerupLinks.forEach(x => {
@@ -454,7 +454,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							links.push(x);
 							return;
 						}
-						
+
 						runnerupsData.push([x.player, x.years]);
 					});
 					if (runnerupsData.length > 0)
@@ -466,37 +466,10 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							'other': true
 						});
 				});
-				
+
 				var usedNodeIds = new Set(links.flatMap(x => [x.source, x.target]));
 				var nodes = nodes.filter(x => usedNodeIds.has(x.node));
 				var mapOldIdx = nodes.map(x => x['node']).map((oldIdx, idx) => [oldIdx, idx]).reduce((acc, cur) => {acc[cur[0]] = cur[1]; return acc;}, {});
-				var nodes = nodes.map(x => {
-					x['node'] = mapOldIdx[x['node']];
-					return x;
-				});
-				
-				var links = links.map(x => {
-					x['source'] = mapOldIdx[x['source']];
-					x['target'] = mapOldIdx[x['target']];
-					return x;
-				});
-				
-				/**
-				var winnerTopK = getTop(winnerLinks);
-				var winnerLinks = winnerLinks.flatMap(x => {
-					if (winnerTopK.includes(x.name)) return [];
-					x.name = 'Other Winners';
-					x.source = getOtherId('W');
-					x.other = true;
-					
-					return [x];
-				});
-				
-				var topPlayers = new Set(getTop(winnerLinks).concat(getTop(runnerupLinks)).concat(grandSlams).map(x => x[0]));
-				var nodes = nodes.filter(x => topPlayers.has(x['name']));
-				var links = links.filter(x => topPlayers.has(x['player']));
-				var mapOldIdx = nodes.map(x => x['node']).map((oldIdx, idx) => [oldIdx, idx]).reduce((acc, cur) => {acc[cur[0]] = cur[1]; return acc;}, {});
-				
 				var nodes = nodes.map(x => {
 					x['node'] = mapOldIdx[x['node']];
 					return x;
@@ -507,13 +480,40 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					x['target'] = mapOldIdx[x['target']];
 					return x;
 				});
-				
+
+				/**
+				var winnerTopK = getTop(winnerLinks);
+				var winnerLinks = winnerLinks.flatMap(x => {
+					if (winnerTopK.includes(x.name)) return [];
+					x.name = 'Other Winners';
+					x.source = getOtherId('W');
+					x.other = true;
+
+					return [x];
+				});
+
+				var topPlayers = new Set(getTop(winnerLinks).concat(getTop(runnerupLinks)).concat(grandSlams).map(x => x[0]));
+				var nodes = nodes.filter(x => topPlayers.has(x['name']));
+				var links = links.filter(x => topPlayers.has(x['player']));
+				var mapOldIdx = nodes.map(x => x['node']).map((oldIdx, idx) => [oldIdx, idx]).reduce((acc, cur) => {acc[cur[0]] = cur[1]; return acc;}, {});
+
+				var nodes = nodes.map(x => {
+					x['node'] = mapOldIdx[x['node']];
+					return x;
+				});
+
+				var links = links.map(x => {
+					x['source'] = mapOldIdx[x['source']];
+					x['target'] = mapOldIdx[x['target']];
+					return x;
+				});
+
 				grandSlams.map(x => x[0]).forEach(tournamentName => {
 					var GSLinks = links.filter(x => x['tournament'] == tournamentName && topPlayers.has(x['player']));
 					var years = new Set(GSLinks.flatMap(x => x['years']));
 					var yearsData = data.filter(x => years.has(x['Year']) && x['Tournament'] == tournamentName);
 					var tournamentNodeId = nodes.filter(x => x['name'] == tournamentName)[0]['node'];
-					
+
 					var missingWinnersData = yearsData.filter(x => !topPlayers.has(x['Winner']));
 					var numMissingWinnersData = missingWinnersData.length;
 					if (numMissingWinnersData > 0) {
@@ -527,7 +527,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							'other': true
 						})
 					}
-					
+
 					var missingLosersData = yearsData.filter(x => !topPlayers.has(x['Runnerup']));
 					var numMissingLosersData = missingLosersData.length;
 					if (numMissingLosersData > 0) {
@@ -541,7 +541,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							'other': true
 						})
 					}
-					
+
 					function reduceMissingPlayers(data, type) {
 						return data.map(x => [x[type], x['Year']]).reverse().reduce((acc, cur) => {
 							if (!(cur[0] in acc))
@@ -552,7 +552,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					}
 				});
 				**/
-				
+
 				return {'nodes': nodes, 'links': links};
 			}
 
@@ -571,7 +571,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					ret += "Year" + (d.years.length > 1 ? "s" : "") + ": " + d.years.reverse().join(', ');
 					return ret;
 				}
-				
+
 				var ret = "Other players\n";
 				ret += d.data.sort((f, s) => {
 					if (f[1].length < s[1].length) return +1;
@@ -583,12 +583,12 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 			},  color = d3.scaleOrdinal(d3.schemeCategory10);
 
 			// append the svg canvas to the page
-			var svg = d3.select("#sankey").append("svg")
+			var svg = d3.select("#sankey_div").append("svg")
 						.attr("id", "sankey")
 						.attr("width", width + margin.left + margin.right)
 						.attr("height", height + margin.top + margin.bottom)
 						.append("g")
-						.attr("transform", 
+						.attr("transform",
 							  "translate(" + margin.left + "," + margin.top + ")");
 
 			// Set the sankey diagram properties
@@ -610,7 +610,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							.attr("class", "link")
 							.attr("d", path)
 							.style("fill", "none")
-							.style("stroke", "tan")
+							.style("stroke", "gray")
 							.style("stroke-opacity", ".33")
 							.on("mouseover", function() { d3.select(this).style("stroke-opacity", ".5") } )
 							.on("mouseout", function() { d3.select(this).style("stroke-opacity", ".2") } )
@@ -626,7 +626,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 							.data(sankeyData.nodes)
 							.enter().append("g")
 							.attr("class", "node")
-							.attr("transform", function(d) { 
+							.attr("transform", function(d) {
 								return "translate(" + d.x + "," + d.y + ")";
 							})
 							.call(d3.drag()
@@ -648,12 +648,12 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 			node.append("rect")
 				.attr("height", function(d) { return d.dy; })
 				.attr("width", sankey.nodeWidth())
-				.style("fill", function(d) { 
+				.style("fill", function(d) {
 					return d.color = color(d.name.replace(/ .*/, "")); })
-				.style("stroke", function(d) { 
+				.style("stroke", function(d) {
 					return d3.rgb(d.color).darker(2); })
 				.append("title")
-				.text(function(d) { 
+				.text(function(d) {
 					return d.name + "\n" + "Total " + d.value + " Grand Slam Finals"; });
 
 			// add in the title for the nodes
@@ -668,7 +668,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				.filter(function(d) { return d.x < width / 2; })
 				.attr("x", 6 + sankey.nodeWidth())
 				.attr("text-anchor", "start");
-			
+
 			/**
 			var playerInformationText =
 				node.append("text")
@@ -678,7 +678,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				.attr("text-anchor", "start")
 				.attr("visibility", "hidden")
 				.text(function(d) { return generatePlayerDescription(d.name) })
-			
+
 			playerInformationText
 				.append("set")
 				.attr("attributeName", "visibility")
@@ -686,17 +686,17 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				.attr("to", "visible")
 				.attr("begin", function (d) { return "node:" + d.name + ".mouseover"})
 				.attr("end", function (d) { return "node:" + d.name + ".mouseout"});
-			
+
 			function generatePlayerDescription(playerName) {
 				return ">>><i>" + playerName + "</i>";
 			}
 			**/
-			
-				
+
+
 
 			// the function for moving the nodes
 			function dragmove(d) {
-				d3.select(this).attr("transform", 
+				d3.select(this).attr("transform",
 					"translate(" + (
 						   d.x = Math.max(0, Math.min(width - d.dx, d3.event.x))
 						) + "," + (
@@ -706,7 +706,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				sankey.relayout();
 				link.attr("d", path);
 			}
-			
+
 			function endclick(d) {
 				var wasDragged = d3.select(this).attr("dragged");
 				d3.select(this).attr("dragged", "False");
@@ -722,14 +722,14 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				else
 					popup.classList.toggle("show");
 				popup.style.position = "absolute";
-				popup.style.left = (d3.event.x + (d.type == 'winner' ? +150 : -200)) + 'px';
+				popup.style.left = (d3.event.x + (d.type == 'winner' ? +350 : -200)) + 'px';
 				popup.style.top = d3.event.y + 'px';
 				popup.innerHTML = generatePlayerDescription(playerName);
-				
+
 				function generatePlayerDescription(playerName) {
 					const base_url = '../data/player_images/';
 					var image_url = base_url + playerName + '.jpg';
-					
+
 					const playerInfo = getPlayerInfo(playerName);
 
 					var ret = '<div class="infoTitle">' + playerName + '</div>';
@@ -763,12 +763,12 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					ret += '</tbody>';
 					ret += '</table>';
 					return ret;
-					
+
 					function getPlayerInfo(playerName) {
 						var curPlayerData = playersData.filter(x => x.Name.includes(playerName));
 						if (curPlayerData.length == 0) return {};
 						var data = curPlayerData[0];
-						
+
 						return {
 							'name': removeQuotes(data.Name),
 							'country': removeQuotes(data['Country (sports)']),
@@ -790,6 +790,6 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 };
 
 function updateSankey(URL, range, gender) {
-	d3.select('#sankey').selectAll('svg').remove();
+	d3.select('#sankey_div').selectAll('svg').remove();
 	makeSankey(URL, range, gender);
 }
