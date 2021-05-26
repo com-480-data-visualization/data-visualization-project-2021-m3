@@ -311,7 +311,7 @@ d3.sankey = function() {
 };
 
 function makeSankey(URL, range = [1968, 2021], gender = "M") {
-	const menDataURL = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/men_players_info.csv";
+	const menDataURL = "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/combined_players_info.csv";
 	d3.csv(URL, function(_, data) {
 		const _data = data;
 		d3.csv(menDataURL, function(_, playersData) {
