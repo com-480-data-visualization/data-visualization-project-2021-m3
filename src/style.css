@@ -32,7 +32,7 @@ body {
 }
 
 .width-limited {
-	max-width: 60rem;
+	max-width: 100rem;
 
 	/* Center horizontally: */
 	/*margin-left: auto;
@@ -125,6 +125,9 @@ nav li {
 	height: 70px;
 	border-top: 10px solid darkgray;
 	opacity: 0.9;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }
 
 #search{
@@ -136,13 +139,12 @@ nav li {
 }
 
 .timeline_div{
-	max-width: 60em;
+	max-width: 60em; 
 	margin-top: 15px;
 	margin-left: 180px;
 	margin-right: 180px;
 	float: left;
 	height: 80px;
-
 }
 
 
@@ -152,9 +154,9 @@ nav li {
   display: inline-block;
   width: 90px;
   height: 34px;
-	float: right;
-	margin-right:80px;
-	margin-top: 20px;
+float: right;
+margin-right:80px;
+margin-top: 20px;
 }
 
 .switch #switchButton {display:none;}
@@ -241,7 +243,6 @@ padding-left:25px;
 	margin-right: 150px;
 	margin-left: 150px;
 	padding-top: 30px;
-
 }
 #sankey{
 	margin-left: 16px;

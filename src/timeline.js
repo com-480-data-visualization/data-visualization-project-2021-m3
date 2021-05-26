@@ -8,13 +8,14 @@ var margin = {
     top: 10,
     right: 40,
     bottom: 150,
-    left: 60
+    left: 40
     }
 
-var width = document.getElementById("timeline").clientWidth * 0.95,
+var width = $(document).width() * 0.6,
   timeline_height = 80,
   h = 25,
   w = width - margin.left - margin.right;
+  console.log(w)
 
 class Timeline {
   constructor(element) {
@@ -158,6 +159,7 @@ whenDocumentLoaded(() => {
     /*d3.select("#button-male").on("click", function() {
       plot_timeline.initPlots("M")
     })*/
+    
     var clicked=false;
     d3.select("#button").on("click", function() {
       graph.magnifier_on_off(); // fisheye zoom
