@@ -11,7 +11,7 @@ var margin = {
     left: 40
     }
 
-var width = $(document).width() * 0.6,
+var width = $(document).width() * 0.5,
   timeline_height = 80,
   h = 25,
   w = width - margin.left - margin.right;

@@ -221,7 +221,8 @@ class Network {
 
     // autocomplete & event listener for search box
     $("#search").autocomplete({
-      source: this.players
+      source: this.players,
+      position: {  collision: "flip"  }
     });
 
     var self = this;
