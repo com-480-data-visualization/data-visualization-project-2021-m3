@@ -156,10 +156,7 @@ whenDocumentLoaded(() => {
       }
     })
 
-    /*d3.select("#button-male").on("click", function() {
-      plot_timeline.initPlots("M")
-    })*/
-    
+
     var clicked=false;
     d3.select("#button").on("click", function() {
       graph.magnifier_on_off(); // fisheye zoom
@@ -173,6 +170,8 @@ whenDocumentLoaded(() => {
         clicked  = true;
     }
     })
+
+    d3.select(".exitButton").on("click",function() {graph.exitSearch();});
 });
 
 addEventListener('resize', function() {

@@ -139,7 +139,7 @@ nav li {
 }
 
 .timeline_div{
-	max-width: 60em; 
+	max-width: 60em;
 	margin-top: 15px;
 	margin-left: 180px;
 	margin-right: 180px;
@@ -242,7 +242,7 @@ padding-left:25px;
 	opacity: 0.8;
 	margin-right: 150px;
 	margin-left: 150px;
-	padding-top: 30px; 
+	padding-top: 30px;
 	width: 1500px;
 }
 #sankey{
@@ -381,17 +381,27 @@ rect.selection {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     *border-right-width: 2px;
     *border-bottom-width: 2px;
-	color: rgba(0,0,0,0.6); 
-	overflow-y: scroll; 
+	color: rgba(0,0,0,0.6);
+	overflow-y: scroll;
 	overflow-x: hidden;
 }
 
-.ui-helper-hidden-accessible { 
-	display:none; 
+.ui-helper-hidden-accessible {
+	display:none;
 }
 
-.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus { 
+.ui-autocomplete.ui-menu .ui-menu-item.ui-state-focus {
 	color: black;
+}
+
+#ui-id-1{
+	position: fixed;
+}
+
+.exitButton {
+	float: right;
+	margin-top: 23px;
+	height: 31px;
 }
 
 .lens {
