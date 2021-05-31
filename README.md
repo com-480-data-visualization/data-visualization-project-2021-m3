@@ -91,11 +91,12 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Fix Sankey when many players have to be shown - Ljupche
 - [x] Weighted edges in network graph - Marie
 - [x] Add player profiles - Marie, Ljupche
-- [ ] Make search box more functional - Marie
-- [ ] Add titles to Sankey (Winner & Runner-Up)
+- [x] Make search box more functional - Marie, Marija
+- [x] Add titles to Sankey (Winner & Runner-Up) - Marija
 - [ ] Add tournament logos to nodes
-- [ ] Add info to graph links
+- [x] Add info to graph links - Marija
 - [ ] Fix layout
+- [ ] Bound the network graph on the bottom
 
 ## Late policy
 
