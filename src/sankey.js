@@ -557,7 +557,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 			}
 
 			var margin = {top: 10, right: 10, bottom: 10, left: 10},
-			width = 1450 - margin.left - margin.right,
+			width = 950 - margin.left - margin.right,
 			height = 740 - margin.top - margin.bottom;
 
 			var edgeDescription = function(d) {

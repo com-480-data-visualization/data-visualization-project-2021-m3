@@ -1,8 +1,8 @@
 
 export { Network }
 
-var height = 800;
-var width = 1200;
+var height = 700;
+var width = 900;
 var margin = {
   top: 50,
   right: 40,

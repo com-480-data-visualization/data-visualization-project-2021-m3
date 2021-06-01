@@ -1,5 +1,5 @@
 :root {
-	--theme-color-dark: rgb(141, 42, 38);
+	--theme-color-dark: green;
 	--theme-color-darkest: rgb(61, 11, 9);
 	--theme-color-light: rgb(204, 198, 198);
  	--background-color: rgba(68, 11, 9, 0.109);
@@ -24,20 +24,19 @@ body {
 	font-size: 1.1rem;
 	background-color: white;
 	background-image: url('../data/img/background.jpg');
-  background-repeat: no-repeat;
+  	background-repeat: no-repeat;
 	background-attachment: fixed;
-  background-size: cover;
-	color: var(--theme-color-darkest);
+ 	background-size: cover;
+	color: black;
 	height: 1950px;
 }
 
-.width-limited {
-	max-width: 100rem;
-
-	/* Center horizontally: */
-	/*margin-left: auto;
-	margin-right: auto;*/
+#wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;s
 }
+
 
 /* Links: apply our theme color and remove underline */
 a {
@@ -57,7 +56,7 @@ nav a {
 }
 
 nav a:hover {
-	text-decoration: underline;
+	color: rgb(72, 133, 72); 
 }
 
 /* Style of the list of links in the navbar */
@@ -75,6 +74,7 @@ nav li {
 }
 
 .menu {
+	width:100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
@@ -83,10 +83,10 @@ nav li {
 }
 
 #icon{
-	width:65px;
-	height: 50px;
+	width:60px;
+	height: 47.5px;
 	margin-top: 20px;
-	margin-left: 10px;
+	margin-left: 20px;
 }
 
 .title {
@@ -102,6 +102,21 @@ nav li {
 	font-family: 'Playfair Display', serif;
 	margin-top: 13.5px;
 	margin-bottom: 13.5px;
+}
+
+.about{
+	background-color: ghostwhite;
+	opacity: 0.75;
+	width: 1000px;
+	margin: auto;
+	margin-top: 30px;
+	padding: 1rem 2rem; 
+	height: 200px;
+	line-height: 18pt;
+}
+
+.about h2 {
+	text-align: center;
 }
 
 /*--magnifier button--*/
@@ -240,13 +255,13 @@ padding-left:25px;
 #sankey_div{
 	background-color: ghostwhite;
 	opacity: 0.8;
-	margin-right: 150px;
-	margin-left: 150px;
-	padding-top: 30px; 
-	width: 1500px;
+	width: 1000px;
+	margin: 0 auto;
+	margin-top: 30px; 
 }
+
 #sankey{
-	margin-left: 16px;
+	margin-left: 24px;
 }
 
 #winners text, #runnerups text {
@@ -274,6 +289,7 @@ padding-left:25px;
 	width: 100%;
 	height: 40px;
 	display: flex;
+	margin-top: 20px;
 }
 #winners{
 	margin-left: 20px;
@@ -340,15 +356,13 @@ rect.selection {
 #network {
 	display: flex;
 	justify-content: center;
-	width : 1500px;
+	width : 1000px;
 	height: 824px;
 	background-color: ghostwhite;
 	opacity: 0.8;
-	margin-top: 60px;
-	margin-right: 150px;
-	margin-left: 150px;
 	position: relative;
-
+	margin: 0 auto;
+	margin-top: 60px;
 }
 
 
@@ -407,6 +421,17 @@ rect.selection {
 	}
 }
 
+@media screen and (max-width: 950px) {
+    .title h1 {
+        display: none;
+		margin-left: 0;
+    }
+
+	#icon {
+		margin-left: -1rem;
+	}
+}
+
 /* Popup container */
 .popup {
   position: relative;
@@ -419,7 +444,6 @@ rect.selection {
   visibility: hidden;
   background-color: rgb(122, 122, 122);
   color: #fff;
-  text-align: center;
   border-radius: 16px;
   padding: 8px 18px;
   position: absolute;
