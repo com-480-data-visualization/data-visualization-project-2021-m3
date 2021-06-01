@@ -27,9 +27,10 @@ class Network {
     // graph simulation
     this.simulation = d3.forceSimulation()
       .force("link", d3.forceLink().distance(50))
-      .force("charge", d3.forceManyBody().strength(-69))
+      .force("charge", d3.forceManyBody().strength(-30))
       .force("center", d3.forceCenter(width / 2, height / 2))
-      .force('collision', d3.forceCollide().radius(10))
+      .force('collision', d3.forceCollide().radius(40))
+
 
     // scale for calculating weight of edges
     this.linkScale = d3.scaleLinear()
@@ -44,7 +45,7 @@ class Network {
       .attr("r", this.fisheye.radius());
 
     // show or hide node labels
-    this.text_opacity = 0;
+    //this.text_opacity = 0;
   }
 
   rebuildNetwork() {
@@ -61,8 +62,27 @@ class Network {
                   .attr("y1", function(d) { return d.source.y; })
                   .attr("x2", function(d) { return d.target.x; })
                   .attr("y2", function(d) { return d.target.y; })
-    this.link.exit().remove();
+                  //.on("click",function(d) { self.getMatchData(d.source.name,d.target.name); })
 
+    this.link.append("title").text(function(d) {
+        var ret="";
+        var count = 0;
+        var data = self.getMatchData(d.source.name,d.target.name);
+        data.forEach(x=>{
+          ret+="\n";
+          ret+=x.Tournament+"\n";
+          x.values.forEach(y=>{
+            ret+="-"+y.Year+"-"+"\n";
+            ret+="Winner: "+y.Winner+"   Runnerup: "+y.Runnerup+"\n";
+            ret+="Score: "+y.Score+"\n";
+            count+=1;
+          })
+        });
+        ret = "Total games played: " + count + "\n"+ret
+        return ret;
+      });
+
+    this.link.exit().remove();
     this.node = this.svg.selectAll(".nodes")
                   .selectAll(".node")
                   .data(this.nodes)
@@ -73,7 +93,7 @@ class Network {
     this.text = this.node.append("text")
                     .attr("class","textNode")
                     .text(function(d) { return d.name })
-                    .attr("dx", function(d) { return d.value + 12 })
+                    .attr("dx", function(d) { return d.value + 5 })
                     .attr("dy", ".35em")
                     .attr("opacity", this.text_opacity)
 
@@ -106,6 +126,8 @@ class Network {
         self.text.attr('opacity', self.text_opacity)
                  .style('fill', 'grey')
       });
+
+
   }
 
   isConnectedAsSource(a, b) {
@@ -120,8 +142,8 @@ class Network {
     this.node = this.svg.select(".nodes").selectAll(".node");
     this.link = this.svg.select(".links").selectAll(".link");
 
-    this.node.attr("cx", function(d) { return d.x = Math.max(5, Math.min(width - 5, d.x)); })
-        .attr("cy", function(d) { return d.y = Math.max(5, Math.min(height - 5, d.y)); });
+    this.node.attr("cx", function(d) { return d.x = Math.max(8, Math.min(width - 8, d.x)); })
+        .attr("cy", function(d) { return d.y = Math.max(8, Math.min(height - 8, d.y)); });
 
     this.link.attr("x1", function(d) { return d.source.x; })
         .attr("y1", function(d) { return d.source.y; })
@@ -202,12 +224,21 @@ class Network {
         }
       });
       var edges = l.groupBy(['source','target']); // count the number of face-offs per player pair
-
-      self.updateData(nodes, edges)
+      var matchStats = data.groupBy(['Winner','Runnerup']);
+      //console.log(matchStats)
+      self.updateData(nodes, edges, matchStats)
     });
   }
 
-  updateData(nodes, edges) {
+  getMatchData(player1, player2) {
+    var res = this.matchStats.filter(x => (x['Winner'] == player1 && x['Runnerup'] == player2)||(x['Winner'] == player2 && x['Runnerup'] == player1))
+                                .flatMap(x=> x.values).groupBy(['Tournament']);
+    res = res.map(x=>{x.values = x.values.sort(predicateBy("Year"));return x});
+    return res;
+  }
+
+  updateData(nodes, edges, matchStats) {
+    this.matchStats = matchStats;
     this.nodes = nodes;
     this.edges = edges;
     this.players = nodes.map(x => x.name);
@@ -239,7 +270,7 @@ class Network {
 
    } else {
     this.magnify(); // fisheye zoom
-    
+
 
    }
   }
@@ -294,42 +325,81 @@ class Network {
     this.svg.on("mousemove", null) // turn off zooming
     this.simulation.restart();
 
-    this.text_opacity = 0; // hide node labels
+    //this.text_opacity = 0; // hide node labels
+  }
+
+  displayNode(i,d){
+    if (self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d) || i.index === d.index ) {
+      return "block"
+    } else {
+      return "none";
+    }
+
+    //this.link.attr('display', function (d) { return d.source.index === i.index || d.target.index === i.index ? 'block' : 'none';});  })
   }
 
   find_player(){
     // get the searched player
     var searched_player = $('#search').val();
-
+    var neighbors = [];
+    this.edges.forEach((d) => {
+      if(d.source.name == searched_player){
+        neighbors.push(d.target.index);
+      }else if(d.target.name == searched_player){
+        neighbors.push(d.source.index);
+      }
+    });
     if (this.players.indexOf(searched_player) != -1){
-      // highlight player
-      d3.selectAll(".node")
+      // highlight player and don't display other nodes that are not ralted to the selected
+
+      this.node
         .filter(function(d) {
-          return (d.name === searched_player);
+          return (d.name != searched_player && !neighbors.includes(d.index) );
         })
-        .attr("stroke", "red") // TO DO: do something better
-        .attr("fill", "red")
+        .attr("visibility","hidden");
+
+        d3.selectAll(".node")
+          .filter(function(d) {
+            return (d.name === searched_player);
+          })
+          .attr("stroke", "red")
+          .attr("fill", "red");
+
+      this.link.attr("visibility",function (d) { return d.source.name === searched_player || d.target.name === searched_player
+        || (neighbors.includes(d.target.index)&&neighbors.includes(d.source.index)) ? 'visible' : 'hidden';})
     }
   }
+
+  exitSearch(){
+    //console.log("clicks")
+    $('#search').val("");
+    d3.selectAll(".node")
+      .attr("stroke", "none")
+      .attr("fill", "black");
+
+    this.node.attr("visibility","visible");
+    this.link.attr("visibility", "visible");
+  }
 }
+
 
 // groupping on multiple preoperties of an object
 // from https://stackoverflow.com/questions/43973917/group-by-with-multiple-fields-using-d3-js
 Array.prototype.groupBy = function (props) {
   var arr = this;
   var partialResult = {};
-
   arr.forEach(el=>{
       var grpObj = {};
 
       props.forEach(prop=>{
-            grpObj[prop] = el[prop]
+            grpObj[prop] = el[prop];
       });
 
       var key = JSON.stringify(grpObj);
 
       if(!partialResult[key]) partialResult[key] = [];
       partialResult[key].push(el);
+
   });
 
   var finalResult = Object.keys(partialResult).map(key=>{
@@ -338,4 +408,15 @@ Array.prototype.groupBy = function (props) {
      return keyObj;
   })
   return finalResult;
+}
+
+function predicateBy(prop){
+   return function(a,b){
+      if (a[prop] > b[prop]){
+          return -1;
+      } else if(a[prop] < b[prop]){
+          return 1;
+      }
+      return 0;
+   }
 }
