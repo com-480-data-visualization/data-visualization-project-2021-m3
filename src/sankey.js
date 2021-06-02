@@ -677,7 +677,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					.attr('height', function (d) {
 						return 12*Math.sqrt(d.dy);
 					})
-					.attr("xlink:href", d => "/data/logos/" + d.name + ".svg")
+					.attr("xlink:href", d => "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/logos/" + d.name + ".svg")
 					.attr("preserveAspectRatio", "none")
 			
 			tournament_nodes
