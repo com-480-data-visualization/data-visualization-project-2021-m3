@@ -110,7 +110,7 @@ class Network {
     this.neighbours = linkedByIndex;
 
     this.nodeElements = this.node.append("circle")
-      .attr("class", "circle")
+      .attr("class", "circle_network")
       .attr("r", function(d) { return Math.max(d.value, 8) })
       .on("mouseover", function(i){
         self.text.attr('opacity', function (d) {

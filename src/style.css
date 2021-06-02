@@ -37,7 +37,6 @@ body {
   flex-direction: column;
 }
 
-
 /* Links: apply our theme color and remove underline */
 a {
 	color: var(--theme-color-dark);
@@ -343,13 +342,13 @@ rect.selection {
 	stroke: rgb(88, 88, 88);
 }
 
-.node circle{
+.circle_network{
 	stroke:#fff;
 	stroke-width:3px;
 	fill: #171515;
 }
 
-.node circle:hover {
+.circle_network:hover {
 	fill:red;
 }
 

@@ -411,7 +411,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					if (!(type in otherIdsMap)) {
 						otherIdsMap[type] = nodes.length;
 						nodes.push({
-							'name': 'Other ' + (type == 'L' ? 'Runner-ups' : 'Winners'),
+							'name': 'Other ',
 							'node': nodes.length,
 							'tournament': false,
 							'other': true
@@ -645,7 +645,8 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 									// 0 -> d3.event.x to keep the old position
 
 			// add the rectangles for the nodes
-			node.append("rect")
+			node.filter(function(d) { return d.type != 'tournament' })
+				.append("rect")
 				.attr("height", function(d) { return d.dy; })
 				.attr("width", sankey.nodeWidth())
 				.style("fill", function(d) {
@@ -656,8 +657,46 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				.text(function(d) {
 					return d.name + "\n" + "Total " + d.value + " Grand Slam Finals"; });
 
+			var tournament_nodes = node.filter(function(d) { return d.type == 'tournament' })
+			tournament_nodes
+				.append("pattern")
+					.attr("id", d => d.name.replace(/\s/g, '').toLowerCase())
+					.attr('patternUnits', 'userSpaceOnUse')
+					.attr('width', function (d) {
+						return 12*Math.sqrt(d.dy);
+					})
+					.attr('height', function (d) {
+						return 12*Math.sqrt(d.dy);
+					})
+					.attr("x", -54.5)
+					.attr("y", 0)
+				.append("image")
+					.attr('width', function (d) {
+						return 12*Math.sqrt(d.dy);
+					})
+					.attr('height', function (d) {
+						return 12*Math.sqrt(d.dy);
+					})
+					.attr("xlink:href", d => "/data/logos/" + d.name + ".svg")
+					.attr("preserveAspectRatio", "none")
+			
+			tournament_nodes
+				.append("circle")
+				.attr("cx", sankey.nodeWidth()/2)
+				.attr("cy", function (d) {
+					return d.dy/2;
+				})
+				.attr("r", function (d) {
+					return 6*Math.sqrt(d.dy);
+				})
+				.attr('fill', d => "url(#" + d.name.replace(/\s/g, '').toLowerCase() + ")")
+				.attr('stroke-width', 4)
+				.attr('stroke', 'white')
+			
+
 			// add in the title for the nodes
-			node.append("text")
+			node.filter(function(d) { return d.type != 'tournament' })
+				.append("text")
 				.attr("id", function(d) { return "text:" + d.name})
 				.attr("x", -6)
 				.attr("y", function(d) { return d.dy / 2; })
