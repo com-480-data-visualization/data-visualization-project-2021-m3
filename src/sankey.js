@@ -639,7 +639,9 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 										this.parentNode.appendChild(this);
 									})
 									.on("drag", dragmove)
-									.on("end", endclick));
+									.on("end", endclick))
+									.on("mouseover", showPlayerInfo)
+									.on("mouseout", showPlayerInfo);
 			function subject(d) {return { x: d.x, y: d.y }};
 									// xxTODOxx double click resets the position
 									// 0 -> d3.event.x to keep the old position
@@ -747,11 +749,10 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				sankey.relayout();
 				link.attr("d", path);
 			}
-
-			function endclick(d) {
-				var wasDragged = d3.select(this).attr("dragged");
-				d3.select(this).attr("dragged", "False");
-				if (wasDragged && wasDragged == "True") return;
+			
+			function showPlayerInfo(d) {
+				console.log(d);
+				console.log(d3.event);
 				/// a man's gotta do what a man's gotta do
 				var playerName = d3.select(this).select('text')._groups[0][0].innerHTML;
 				if (["Australian Open", "French Open", "Wimbledon", "US Open"].includes(playerName)) return;
@@ -763,8 +764,8 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				else
 					popup.classList.toggle("show");
 				popup.style.position = "absolute";
-				popup.style.left = (d3.event.x + (d.type == 'winner' ? +350 : -200)) + 'px';
-				popup.style.top = d3.event.y + 'px';
+				popup.style.left = (d3.event.x + (d.type == 'winner' ? +150 : -350)) + 'px';
+				popup.style.top = (d3.event.y - 300) + 'px';
 				popup.innerHTML = generatePlayerDescription(playerName);
 
 				function generatePlayerDescription(playerName) {
@@ -824,6 +825,12 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 						}
 					}
 				}
+			}
+
+			function endclick(d) {
+				var wasDragged = d3.select(this).attr("dragged");
+				d3.select(this).attr("dragged", "False");
+				if (wasDragged && wasDragged == "True") return;
 			}
 		});
 
