@@ -96,8 +96,9 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Add tournament logos to nodes - Marie, Ljupche and random guy from StackOverflow
 - [x] Add info to graph links - Marija
 - [x] Fix layout & prettify – Marija 
+- [x] Change the random colours that were meant to be temporary (esp. in graph)
 - [ ] Bound the network graph on the right
-- [ ] Change the random colours that were meant to be temporary (esp. in graph)
+- [ ] Fix search when another search executed without clearing the previous one
 - [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - doesn't work well when scrolling down and then hoovering
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
 
