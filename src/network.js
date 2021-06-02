@@ -93,8 +93,9 @@ class Network {
     this.text = this.node.append("text")
                     .attr("class","textNode")
                     .text(function(d) { return d.name })
-                    .attr("dx", function(d) { return d.value + 5 })
+                    .attr("dx", function(d) { return d.value + 7 })
                     .attr("dy", ".35em")
+                    .attr("font-size", 12)
                     .attr("opacity", this.text_opacity)
 
     // execute force simulation
@@ -117,17 +118,22 @@ class Network {
           if (self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d) || i.index === d.index) {
             return 1
           } else { return self.text_opacity }
-        }).style('fill',  function (d) { return i.index === d.index ? 'black' : 'grey';})
-        self.link.style('stroke', function (d) { return d.source.index === i.index || d.target.index === i.index ? 'red' : 'grey';
+        }).style('fill',  function (d) { 
+          if (i.index === d.index || self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d)){
+            return 'black'
+           } else {
+              return 'gray'
+            }})
+        .style('font-size',  function (d) { return i.index === d.index ? 18 : 12;})
+        self.link.style('stroke', function (d) { return d.source.index === i.index || d.target.index === i.index ? 'green' : 'lightgrey';
       })})
       // highlight neighbours on hover
       .on('mouseout', function (d) {
         self.link.style("stroke", "grey")
         self.text.attr('opacity', self.text_opacity)
-                 .style('fill', 'grey')
+                 .style('fill', 'black')
+                 .style("font-size", 12)
       });
-
-
   }
 
   isConnectedAsSource(a, b) {
@@ -358,12 +364,21 @@ class Network {
         })
         .attr("visibility","hidden");
 
-        d3.selectAll(".node")
+      d3.selectAll(".node")
           .filter(function(d) {
             return (d.name === searched_player);
           })
-          .attr("stroke", "red")
-          .attr("fill", "red");
+          .attr("stroke", "green")
+          .attr("fill", "green");
+
+      d3.selectAll(".circle_network")
+          .filter(function(d) {
+            return (d.name === searched_player);
+          })
+          .style("fill", "green");
+
+      this.text.style('font-size', function (d) { return d.name === searched_player ? 18 : 12 })
+      .style('color', function (d) { return d.name === searched_player ? 'green' : 'black' })
 
       this.link.attr("visibility",function (d) { return d.source.name === searched_player || d.target.name === searched_player
         || (neighbors.includes(d.target.index)&&neighbors.includes(d.source.index)) ? 'visible' : 'hidden';})
@@ -371,11 +386,38 @@ class Network {
   }
 
   exitSearch(){
+    var self = this;
     //console.log("clicks")
     $('#search').val("");
     d3.selectAll(".node")
       .attr("stroke", "none")
       .attr("fill", "black");
+
+    d3.selectAll(".circle_network")
+      .style("fill", "black")
+      .on("mouseover", function(i){
+        d3.select(this).style("fill", "green")
+        self.text.attr('opacity', function (d) {
+          if (self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d) || i.index === d.index) {
+            return 1
+          } else { return self.text_opacity }
+        }).style('fill',  function (d) { 
+          if (i.index === d.index || self.isConnectedAsTarget(i, d) || self.isConnectedAsSource(i, d)){
+            return 'black'
+           } else {
+              return 'gray'
+            }})
+        .style('font-size',  function (d) { return i.index === d.index ? 18 : 12;})
+        self.link.style('stroke', function (d) { return d.source.index === i.index || d.target.index === i.index ? 'green' : 'lightgrey';
+      })})
+      // highlight neighbours on hover
+      .on('mouseout', function (d) {
+        d3.select(this).style("fill", "black")
+        self.link.style("stroke", "grey")
+        self.text.attr('opacity', self.text_opacity)
+                 .style('fill', 'black')
+                 .style("font-size", 12)
+      });
 
     this.node.attr("visibility","visible");
     this.link.attr("visibility", "visible");

@@ -349,7 +349,7 @@ rect.selection {
 }
 
 .circle_network:hover {
-	fill:red;
+	fill:green;
 }
 
 #network {
