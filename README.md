@@ -101,6 +101,7 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [ ] Fix search when another search executed without clearing the previous one
 - [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - doesn't work well when scrolling down and then hoovering
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
+- [ ] Remove xxTODOxx's
 
 ## Late policy
 
