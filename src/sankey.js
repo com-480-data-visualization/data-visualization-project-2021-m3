@@ -59,8 +59,8 @@ d3.sankey = function() {
 	var curvature = .5;
 
 	function link(d) {
-	  var x0 = d.source.x + d.source.dx,
-		  x1 = d.target.x,
+	  var x0 = d.source.x + d.source.dx / 2,
+		  x1 = d.target.x + d.target.dx / 2,
 		  xi = d3.interpolateNumber(x0, x1),
 		  x2 = xi(curvature),
 		  x3 = xi(1 - curvature),
@@ -663,19 +663,21 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					.attr("id", d => d.name.replace(/\s/g, '').toLowerCase())
 					.attr('patternUnits', 'userSpaceOnUse')
 					.attr('width', function (d) {
-						return 12*Math.sqrt(d.dy);
+						return d.dy;
 					})
 					.attr('height', function (d) {
-						return 12*Math.sqrt(d.dy);
+						return d.dy;
 					})
-					.attr("x", -54.5)
+					.attr("x", function(d) {
+						return d.dy/2+d.dx/2;
+					})
 					.attr("y", 0)
 				.append("image")
 					.attr('width', function (d) {
-						return 12*Math.sqrt(d.dy);
+						return d.dy;
 					})
 					.attr('height', function (d) {
-						return 12*Math.sqrt(d.dy);
+						return d.dy;
 					})
 					.attr("xlink:href", d => "https://raw.githubusercontent.com/com-480-data-visualization/data-visualization-project-2021-m3/master/data/logos/" + d.name + ".svg")
 					.attr("preserveAspectRatio", "none")
@@ -687,7 +689,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					return d.dy/2;
 				})
 				.attr("r", function (d) {
-					return 6*Math.sqrt(d.dy);
+					return d.dy/2;
 				})
 				.attr('fill', d => "url(#" + d.name.replace(/\s/g, '').toLowerCase() + ")")
 				.attr('stroke-width', 4)
