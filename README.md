@@ -81,7 +81,7 @@ Some examples we were inspired by but are not related to our topic:
 
 The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website [here](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/).
 
-## Milestone 3 (30th May, 5pm)
+## Milestone 3 (4th June, 5pm)
 
 **80% of the final grade**
 - [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
