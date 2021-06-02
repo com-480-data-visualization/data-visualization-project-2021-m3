@@ -98,7 +98,7 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Fix layout & prettify – Marija 
 - [ ] Bound the network graph on the right
 - [ ] Change the random colours that were meant to be temporary (esp. in graph)
-- [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - seems ok now?
+- [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - doesn't work well when scrolling down and then hoovering
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
 
 ## Late policy
