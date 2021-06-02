@@ -15,7 +15,6 @@ var width = $(document).width() * 0.5,
   timeline_height = 80,
   h = 25,
   w = width - margin.left - margin.right;
-  console.log(w)
 
 class Timeline {
   constructor(element) {

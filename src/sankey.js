@@ -391,8 +391,6 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				const winnerLinks = getLinkData('Winner', winners);
 				const runnerupLinks = getLinkData('Runnerup', runnerups);
 
-
-
 				function getTop(data) {
 					return Object.entries(data.reduce((acc, cur) => {
 								if (cur['player'] in acc)
@@ -419,16 +417,26 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					}
 					return otherIdsMap[type];
 				}
+				
+				var allWinners = new Set(grandSlams.map(x => x[0]).flatMap(tournamentName => {
+					var tournamentWinnerLinks = winnerLinks.filter(x => x.tournament == tournamentName);
+					var winnersTopK = getTop(tournamentWinnerLinks);
+					return winnersTopK;
+				}));
+				var allRunnerup = new Set(grandSlams.map(x => x[0]).flatMap(tournamentName => {
+					var tournamentRunnerupLinks = runnerupLinks.filter(x => x.tournament == tournamentName);
+					var runnerupTopK = getTop(tournamentRunnerupLinks);
+					return runnerupTopK;
+				}));
 
 				var links = [];
 				grandSlams.map(x => x[0]).forEach(tournamentName => {
 					var tournamentWinnerLinks = winnerLinks.filter(x => x.tournament == tournamentName);
 					var tournamentNodeId = tournamentWinnerLinks[0].target;
 
-					var winnersTopK = getTop(tournamentWinnerLinks);
 					var winnersData = [];
 					tournamentWinnerLinks.forEach(x => {
-						if (winnersTopK.includes(x.player)) {
+						if (allWinners.has(x.player)) {
 							links.push(x);
 							return;
 						}
@@ -447,10 +455,9 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					var tournamentRunnerupLinks = runnerupLinks.filter(x => x.tournament == tournamentName);
 					var tournamentNodeId = tournamentRunnerupLinks[0].source;
 
-					var runnerupsTopK = getTop(tournamentRunnerupLinks);
 					var runnerupsData = [];
 					tournamentRunnerupLinks.forEach(x => {
-						if (runnerupsTopK.includes(x.player)) {
+						if (allRunnerup.has(x.player)) {
 							links.push(x);
 							return;
 						}
