@@ -96,7 +96,7 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Add tournament logos to nodes: done, but the alignment is messed up by the changes in Sankey sometimes - can we fix the position of the sink nodes? Or I've also tried to set a fixed size of the sink nodes but the sinking links are sometimes a bit off...
 - [x] Add info to graph links - Marija
 - [x] Fix layout & prettify – Marija 
-- [x] Bound the network graph on the bottom
+- [ ] Bound the network graph on the right
 - [ ] Change the random colours that were meant to be temporary (esp. in graph)
 - [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing)
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
