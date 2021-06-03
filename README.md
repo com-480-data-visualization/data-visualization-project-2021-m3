@@ -98,10 +98,10 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [x] Fix layout & prettify – Marija 
 - [x] Change the random colours that were meant to be temporary (esp. in graph)
 - [ ] Bound the network graph on the right
-- [ ] Fix search when another search executed without clearing the previous one
-- [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - doesn't work well when scrolling down and then hoovering
+- [x] Fix search when another search executed without clearing the previous one
+- [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - 1/2 fixed
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
-- [ ] Remove xxTODOxx's
+- [x] Remove xxTODOxx's
 
 ## Project Structure
 
