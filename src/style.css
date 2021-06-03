@@ -443,6 +443,7 @@ rect.selection {
 
 /* Popup container */
 .popup {
+  outline: none;
   position: relative;
   display: inline-block;
   cursor: pointer;
@@ -461,12 +462,13 @@ rect.selection {
   left: 50%;
   margin-left: -80px;
   width: 350px;
-  height: 550px;
+  height: 625px;
   text-align: center;
 }
 
 /* Toggle this class when clicking on the popup container (hide and show the popup) */
 .popup .show {
+  outline: none;
   visibility: visible;
   -webkit-animation: fadeIn 1s;
   animation: fadeIn 1s

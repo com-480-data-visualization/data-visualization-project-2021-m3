@@ -38,7 +38,7 @@ class Network {
 
     // magnifier settings
     this.fisheye = d3.fisheye.circular()
-      .radius(150)
+      .radius(125)
       .distortion(5);
     this.lens = this.svg.append("circle")
       .attr("class","lens")
@@ -169,7 +169,7 @@ class Network {
   }
 
   dragstarted(d) {
-    if (!d3.event.active) this.simulation.alphaTarget(0.3).restart();
+    if (!d3.event.active) this.simulation.alphaTarget(0.25).restart();
     d.fx = d.x;
     d.fy = d.y;
   }
@@ -265,6 +265,7 @@ class Network {
     var self = this;
     $("#search").keyup(function (e) {
       if (e.keyCode == 13) {
+		self.exitSearch(false);
         self.find_player();
       }
     });
@@ -380,15 +381,15 @@ class Network {
       this.text.style('font-size', function (d) { return d.name === searched_player ? 18 : 12 })
       .style('color', function (d) { return d.name === searched_player ? 'green' : 'black' })
 
-      this.link.attr("visibility",function (d) { return d.source.name === searched_player || d.target.name === searched_player
+      this.link.attr("visibility", function (d) { return d.source.name === searched_player || d.target.name === searched_player
         || (neighbors.includes(d.target.index)&&neighbors.includes(d.source.index)) ? 'visible' : 'hidden';})
     }
   }
 
-  exitSearch(){
+  exitSearch(resetValue = true){
     var self = this;
     //console.log("clicks")
-    $('#search').val("");
+	if (resetValue) $('#search').val("");
     d3.selectAll(".node")
       .attr("stroke", "none")
       .attr("fill", "black");

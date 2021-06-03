@@ -108,6 +108,7 @@ class Timeline {
         var actual = event.selection.map(this.x.invert);
         /// var selection = actual.map(Math.round) nononono
 		var selection = actual.map(Math.floor) // year selection
+		console.log(selection);
         d3.select("brush").transition().call(event.target.move, selection.map(this.x))
         updateSankey(data, selection, this.gender);
 
