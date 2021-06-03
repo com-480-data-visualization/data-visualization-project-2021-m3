@@ -526,7 +526,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					return -1;
 				}).map(x => [x[0], x[1].reverse()]).map(x => '' + x[0] + ': ' + x[1].join(', ')).join('\n');
 				return ret;
-			},  color = d3.interpolateGreys;
+			},  color = d3.interpolateGreens;
 
 			// append the svg canvas to the page
 			var svg = d3.select("#sankey_div").append("svg")
