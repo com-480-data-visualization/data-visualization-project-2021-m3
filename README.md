@@ -103,8 +103,21 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website 
 - [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
 - [ ] Remove xxTODOxx's
 
-## Late policy
+## Project Structure
 
-- < 24h: 80% of the grade for the milestone
-- < 48h: 70% of the grade for the milestone
+The data used for the visualization together with the images used for the website can be found in the `data` folder. 
+
+The folder `notebooks` contains two jupiter notebooks:
+- preprocessing_eda.ipynb - used for preprocessing the scraped data and creating the datasets for the visualizations
+- scraping. ipynb - used for scraping the data from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Grand_Slam_singles_finals) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/)
+
+
+The folder `src` contains the files for creating and styling the website and javascript files:
+- index.html  - the main HTML file creating the website
+- about.html  - credits HTML page 
+- style.css   - the style for our website
+- fisheye.js  - javascript file implementing the magnifier glass
+- network.js  - javascript file implementing the network graph
+- sankey.js   - javascript file implementing the Sankey Diagram
+- timeline.js - javascript file implementing the timeline element which connects all the other elements 
 
