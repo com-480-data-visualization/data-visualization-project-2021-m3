@@ -79,7 +79,7 @@ The report for Milestone 2 can be found [here](Milestone-2.pdf).
 
 ## Milestone 3 (4th June, 5pm)
 
-[Visualization](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/) – Process Book – [Screencast](https://youtu.be/529e91XUh_k)
+[Visualization](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/) – [Process Book](https://github.com/com-480-data-visualization/data-visualization-project-2021-m3/blob/master/ProcessBook.pdf) – [Screencast](https://youtu.be/529e91XUh_k)
 
 ## Project Structure
 
