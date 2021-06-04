@@ -10,8 +10,6 @@
 
 ## Milestone 1 (23rd April, 5pm)
 
-**10% of the final grade**
-
 ### Dataset
 
 We created our dataset by scraping data from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Grand_Slam_singles_finals) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/). Our data consists of:
@@ -77,47 +75,27 @@ Some examples we were inspired by but are not related to our topic:
 
 ## Milestone 2 (7th May, 5pm)
 
-**10% of the final grade**
-
-The report for Milestone 2 can be found [here](Milestone-2.pdf) and the website [here](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/).
+The report for Milestone 2 can be found [here](Milestone-2.pdf).
 
 ## Milestone 3 (4th June, 5pm)
 
-**80% of the final grade**
-- [x] Create timeline & [slider](https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush) - Marie
-- [x] Make a class for Sankey diagram - Ljupche, Marie and VividD from StackOverflow <3
-- [x] Make a class for network graph - Marija
-- [x] Fix switch to female data – Marie
-- [x] Fix Sankey when many players have to be shown - Ljupche
-- [x] Weighted edges in network graph - Marie
-- [x] Add player profiles - Marie, Ljupche
-- [x] Make search box more functional - Marie, Marija
-- [x] Add titles to Sankey (Winner & Runner-Up) - Marija
-- [x] Add tournament logos to nodes - Marie, Ljupche and random guy from StackOverflow
-- [x] Add info to graph links - Marija
-- [x] Fix layout & prettify – Marija 
-- [x] Change the random colours that were meant to be temporary (esp. in graph)
-- [ ] Bound the network graph on the right
-- [x] Fix search when another search executed without clearing the previous one
-- [ ] Fix position of pop-up & make it dispaly upon hover (or implement more intuitive closing) - 1/2 fixed
-- [ ] (Make Sankey transition smooth as Manoel suggested? Probably not worth it now...)
-- [x] Remove xxTODOxx's
+[Visualization](https://com-480-data-visualization.github.io/data-visualization-project-2021-m3/) – Process Book – Screencast
 
 ## Project Structure
 
 The data used for the visualization together with the images used for the website can be found in the `data` folder. 
 
 The folder `notebooks` contains two jupiter notebooks:
-- preprocessing_eda.ipynb - used for preprocessing the scraped data and creating the datasets for the visualizations
-- scraping. ipynb - used for scraping the data from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Grand_Slam_singles_finals) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/)
+- `preprocessing_eda.ipynb` - used for preprocessing the scraped data and creating the datasets for the visualizations
+- `scraping.ipynb` - used for scraping the data from [Wikipedia](https://en.wikipedia.org/wiki/List_of_Grand_Slam_singles_finals) and [Ultimate Tennis Statistics](https://www.ultimatetennisstatistics.com/)
 
 
 The folder `src` contains the files for creating and styling the website and javascript files:
-- index.html  - the main HTML file creating the website
-- about.html  - credits HTML page 
-- style.css   - the style for our website
-- fisheye.js  - javascript file implementing the magnifier glass
-- network.js  - javascript file implementing the network graph
-- sankey.js   - javascript file implementing the Sankey Diagram
-- timeline.js - javascript file implementing the timeline element which connects all the other elements 
+- `index.html`  - the main HTML file creating the website
+- `about.html`  - credits HTML page 
+- `style.css`   - the style for our website
+- `fisheye.js`  - javascript file implementing the magnifier glass
+- `network.js`  - javascript file implementing the network graph
+- `sankey.js`   - javascript file implementing the Sankey Diagram
+- `timeline.js` - javascript file implementing the timeline element which connects all the other elements 
 

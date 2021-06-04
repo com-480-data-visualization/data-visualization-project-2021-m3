@@ -526,7 +526,7 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 					return -1;
 				}).map(x => [x[0], x[1].reverse()]).map(x => '' + x[0] + ': ' + x[1].join(', ')).join('\n');
 				return ret;
-			},  color = d3.interpolateGreys;
+			},  color = d3.interpolateGreens;
 
 			// append the svg canvas to the page
 			var svg = d3.select("#sankey_div").append("svg")
@@ -567,7 +567,8 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 			link.append("title")
 				.text(edgeDescription);
 				
-			const maxValue = sankeyData.nodes.filter(x => x.type != "tournament" && !x.other).map(x => x.value * 1).sort((a, b) => b - a)[0];
+			const winnerMaxValue = sankeyData.nodes.filter(x => x.type == "winner").map(x => x.value * 1).sort((a, b) => b - a)[0];
+			const runnerupMaxValue = sankeyData.nodes.filter(x => x.type == "runnerup").map(x => x.value * 1).sort((a, b) => b - a)[0];
 
 			// add in the nodes
 			var node = svg.append("g").selectAll(".node")
@@ -596,8 +597,10 @@ function makeSankey(URL, range = [1968, 2021], gender = "M") {
 				.attr("height", function(d) { return d.dy; })
 				.attr("width", sankey.nodeWidth())
 				.style("fill", function(d) {
-					if (d.other) return color(0);
-					return d.color = color(d.value / maxValue); })
+					if (d.other) return d.color = color(0);
+					if (d.type == "winner") return d.color = color(d.value / winnerMaxValue);
+					return d.color = color(d.value / runnerupMaxValue);
+				})
 				.style("stroke", function(d) {
 					return d3.rgb(d.color).darker(2); })
 				.append("title")
