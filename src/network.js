@@ -2,7 +2,7 @@
 export { Network }
 
 var height = 700;
-var width = 900;
+var width = 825;
 var margin = {
   top: 50,
   right: 40,
